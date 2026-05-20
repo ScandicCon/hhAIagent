@@ -1,0 +1,58 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: hh-ai-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: API_PORT
+        value: 8000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hh-ai-db
+          property: connectionString
+      - key: BOT_TOKEN
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: ADMIN_API_KEY
+        generateValue: true
+      - key: ADMIN_TELEGRAM_IDS
+        sync: false
+      # Set manually after deploy: https://hh-ai-api.onrender.com
+      - key: PUBLIC_URL
+        sync: false
+      - key: YOOKASSA_SHOP_ID
+        sync: false
+      - key: YOOKASSA_SECRET_KEY
+        sync: false
+      - key: HH_CLIENT_ID
+        sync: false
+      - key: HH_CLIENT_SECRET
+        sync: false
+
+  - type: worker
+    name: hh-ai-bot
+    runtime: docker
+    dockerfilePath: ./Dockerfile.bot
+    plan: starter
+    envVars:
+      # Set manually: https://hh-ai-api.onrender.com
+      - key: BACKEND_URL
+        sync: false
+      - key: BOT_TOKEN
+        sync: false
+      - key: BOT_USERNAME
+        sync: false
+      - key: TELEGRAM_PROXY
+        sync: false
+
+databases:
+  - name: hh-ai-db
+    plan: starter
+    databaseName: hh_agent
+    user: hh

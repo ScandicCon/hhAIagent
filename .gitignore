@@ -1,0 +1,60 @@
+# Секреты — никогда в Git
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+**/*.pyc
+**/*.pyo
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Случайный мусор из PowerShell (git rm ... 2>$null)
+$null
+
+# Базы данных (локальные)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/
+hh_agent.db
+
+# Логи и временные файлы
+*.log
+logs/
+tmp/
+temp/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker (локальные override, не шаблоны)
+docker-compose.override.yml
+
+# Cursor (локальные артефакты; agent-transcripts — вне репо)
+.cursor/
