@@ -16,12 +16,18 @@ _env_backend = (os.getenv("BACKEND_URL") or "").strip().rstrip("/")
 _expected = f"http://{API_HOST}:{API_PORT}"
 BACKEND_URL = _env_backend or _expected
 
-_admin_ids_raw = os.getenv("ADMIN_TELEGRAM_IDS", "")
-ADMIN_TELEGRAM_IDS = {
-    int(value.strip())
-    for value in _admin_ids_raw.split(",")
-    if value.strip().isdigit()
-}
+def _parse_admin_telegram_ids(raw: str) -> set[int]:
+    ids: set[int] = set()
+    for part in raw.split(","):
+        token = part.strip().strip('"').strip("'")
+        if token.isdigit():
+            ids.add(int(token))
+    return ids
+
+
+ADMIN_TELEGRAM_IDS = _parse_admin_telegram_ids(
+    os.getenv("ADMIN_TELEGRAM_IDS", ""),
+)
 
 ADMIN_API_KEY = (os.getenv("ADMIN_API_KEY") or "").strip()
 

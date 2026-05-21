@@ -67,7 +67,13 @@ async def _admin_get(path: str) -> dict:
 @router.message(F.text == BTN_ADMIN)
 async def admin_panel(message: Message):
     if not is_admin(message.from_user.id):
-        await message.answer("Команда только для администратора.")
+        await message.answer(
+            "Команда только для администратора.\n\n"
+            f"Твой Telegram ID: <code>{message.from_user.id}</code>\n"
+            "Добавь его в <code>ADMIN_TELEGRAM_IDS</code> в .env на сервере, "
+            "затем: <code>docker compose up -d --force-recreate bot api</code>",
+            parse_mode="HTML",
+        )
         return
 
     await message.answer(

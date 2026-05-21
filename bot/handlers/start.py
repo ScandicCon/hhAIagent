@@ -45,6 +45,15 @@ async def start_handler(message: Message, state: FSMContext):
     )
 
 
+@router.message(Command("myid"))
+async def myid_handler(message: Message):
+    await message.answer(
+        f"Твой Telegram ID: <code>{message.from_user.id}</code>\n"
+        "Его нужно указать в ADMIN_TELEGRAM_IDS в .env.",
+        parse_mode="HTML",
+    )
+
+
 @router.message(Command("help"))
 async def help_handler(message: Message):
     await message.answer(HELP_TEXT, parse_mode="HTML")
