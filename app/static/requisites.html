@@ -3,59 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Реквизиты и контакты продавца HH AI Agent" />
   <title>Реквизиты — HH AI Agent</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    .wrap { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
-    h1 { font-size: 1.75rem; margin-bottom: 24px; }
-    h2 { font-size: 1.1rem; color: #38bdf8; margin: 24px 0 12px; }
-    p, li { color: #cbd5e1; margin: 8px 0; }
-    ul { margin-left: 20px; }
-    .note {
-      margin-top: 32px;
-      padding: 16px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: #94a3b8;
-    }
-    a { color: #38bdf8; }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
-  <div class="wrap">
-    <h1>Реквизиты и сведения о продавце</h1>
+  <nav class="nav">
+    <a class="nav-brand" href="/welcome">
+      <span class="nav-logo">⚡</span>
+      HH AI Agent
+    </a>
+    <div class="nav-links">
+      <a href="/welcome">Главная</a>
+      <a href="/requisites">Реквизиты</a>
+      <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Бот в Telegram</a>
+    </div>
+  </nav>
 
-    <h2>Продавец</h2>
-    <p><strong>ФИО:</strong> <!-- ЗАМЕНИ: как в «Мой налог» -->Долгушев Даниил Максимович</p>
-    <p><strong>Статус:</strong> плательщик налога на профессиональный доход (самозанятый)</p>
-    <p><strong>ИНН:</strong> <!-- ЗАМЕНИ -->320207587587</p>
+  <main class="container page-main">
+    <header class="page-header">
+      <h1>Реквизиты и сведения о продавце</h1>
+      <p>Информация для оплаты подписки Pro и обращений по сервису HH AI Agent.</p>
+    </header>
 
-    <h2>Услуга</h2>
-    <p>Цифровая подписка <strong>Pro</strong> к сервису HH AI Agent — поиск и анализ вакансий на hh.ru в Telegram-боте
-      <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>.</p>
-    <ul>
-      <li>Тариф Pro: от 490 ₽ (разовая оплата за период, указанный в боте)</li>
-      <li>Оплата через ЮKassa на сайте продавца</li>
-    </ul>
+    <div class="info-grid">
+      <section class="info-card">
+        <h2><span>👤</span> Продавец</h2>
+        <dl>
+          <div class="dl-row">
+            <dt>ФИО</dt>
+            <dd>Долгушев Даниил Максимович</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Статус</dt>
+            <dd>Плательщик НПД (самозанятый)</dd>
+          </div>
+          <div class="dl-row">
+            <dt>ИНН</dt>
+            <dd>320207587587</dd>
+          </div>
+        </dl>
+      </section>
 
-    <h2>Контакты</h2>
-    <p><strong>Email:</strong> <!-- ЗАМЕНИ -->support@example.com</p>
-    <p><strong>Telegram:</strong> <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a></p>
+      <section class="info-card">
+        <h2><span>💼</span> Услуга</h2>
+        <p style="color: var(--text-muted); margin-bottom: 12px;">
+          Цифровая подписка <strong style="color: var(--text)">Pro</strong> к сервису HH AI Agent —
+          поиск и AI-анализ вакансий на hh.ru в Telegram-боте
+          <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>.
+        </p>
+        <ul>
+          <li>Тариф Pro: от 490 ₽ (период указан в боте при оплате)</li>
+          <li>Оплата через ЮKassa</li>
+          <li>Доступ активируется автоматически после успешной оплаты</li>
+        </ul>
+      </section>
 
-    <h2>Возврат</h2>
-    <p>Услуга оказывается в электронном виде сразу после оплаты. По вопросам оплаты и доступа — напишите в Telegram или на email выше.</p>
+      <section class="info-card">
+        <h2><span>📬</span> Контакты</h2>
+        <dl>
+          <div class="dl-row">
+            <dt>Email</dt>
+            <dd><a href="mailto:support@example.com">support@example.com</a></dd>
+          </div>
+          <div class="dl-row">
+            <dt>Telegram</dt>
+            <dd><a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a></dd>
+          </div>
+        </dl>
+      </section>
 
-    <p class="note">
-      <a href="/welcome">На главную</a>
-    </p>
-  </div>
+      <section class="info-card">
+        <h2><span>↩️</span> Возврат и поддержка</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          Услуга оказывается в электронном виде сразу после оплаты. По вопросам оплаты,
+          доступа к тарифу Pro и работы бота — напишите в Telegram или на email выше.
+        </p>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="/welcome">← На главную</a>
+        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>

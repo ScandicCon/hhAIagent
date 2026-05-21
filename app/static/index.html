@@ -5,92 +5,140 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="AI-поиск вакансий на hh.ru: оценка резюме, match-score, сопроводительные письма в Telegram" />
   <title>HH AI Agent — умный поиск работы</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-      color: #e2e8f0;
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-    .wrap { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
-    h1 { font-size: 2.2rem; margin-bottom: 12px; line-height: 1.2; }
-    .tag { color: #38bdf8; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; }
-    p { margin: 16px 0; color: #94a3b8; }
-    ul { margin: 20px 0 20px 20px; color: #cbd5e1; }
-  li { margin: 8px 0; }
-    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px 0; }
-    @media (max-width: 600px) { .plans { grid-template-columns: 1fr; } }
-    .plan {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 24px;
-    }
-    .plan h3 { color: #f8fafc; margin-bottom: 8px; font-size: 1.25rem; }
-    .price { font-size: 1.5rem; color: #38bdf8; font-weight: 700; margin: 12px 0; }
-    .pro { border-color: #38bdf8; box-shadow: 0 0 24px rgba(56,189,248,0.15); }
-    .cta {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 16px 32px;
-      background: #38bdf8;
-      color: #0f172a;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    .cta:hover { background: #7dd3fc; }
-    .steps { margin: 32px 0; padding: 24px; background: rgba(0,0,0,0.2); border-radius: 12px; }
-    .steps h2 { color: #f1f5f9; margin-bottom: 16px; }
-    footer { margin-top: 48px; font-size: 0.85rem; color: #64748b; }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
-  <div class="wrap">
-    <p class="tag">HH AI Agent</p>
-    <h1>Ищи работу на hh.ru с AI за 10 минут в день</h1>
-    <p>
-      Отправь резюме в Telegram — получи топ вакансий с оценкой совпадения
-      и готовые сопроводительные письма. Без бесконечного скролла.
-    </p>
-
-    <ul>
-      <li>AI match-score: насколько вакансия подходит тебе</li>
-      <li>Плюсы и минусы каждого отклика</li>
-      <li>Сопроводительное письмо за 1 минуту</li>
-      <li>Утренний дайджест лучших вакансий</li>
-    </ul>
-
-    <div class="steps">
-      <h2>Как начать</h2>
-      <p>1. Открой бота → 2. Отправь резюме → 3. Введи запрос → 4. Выбери вакансию → 5. Получи письмо</p>
-    </div>
-
-    <div class="plans">
-      <div class="plan">
-        <h3>Free</h3>
-        <p class="price">0 ₽</p>
-        <p>5 поисков в неделю<br>1 письмо в неделю</p>
-      </div>
-      <div class="plan pro">
-        <h3>Pro</h3>
-        <p class="price">от 490 ₽/мес</p>
-        <p>100 поисков<br>50 писем<br>Дайджест каждое утро</p>
-      </div>
-    </div>
-
-    <a class="cta" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">
-      Попробовать бесплатно в Telegram
+  <nav class="nav">
+    <a class="nav-brand" href="/welcome">
+      <span class="nav-logo">⚡</span>
+      HH AI Agent
     </a>
+    <div class="nav-links">
+      <a href="#features">Возможности</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="/requisites">Реквизиты</a>
+      <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+    </div>
+  </nav>
 
-    <footer>
+  <main class="container">
+    <section class="hero">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        AI · hh.ru · Telegram
+      </div>
+      <h1>
+        Найди работу на <span class="gradient">hh.ru</span> за 10 минут в день
+      </h1>
+      <p class="hero-lead">
+        Отправь резюме в бот — получи топ вакансий с оценкой совпадения
+        и готовые сопроводительные письма. Без бесконечного скролла.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">
+          Попробовать бесплатно
+        </a>
+        <a class="btn btn-ghost" href="#how">Как это работает</a>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <h2 class="section-title">Почему это удобно</h2>
+      <p class="section-sub">Всё в Telegram — без лишних вкладок и регистраций</p>
+      <div class="features">
+        <article class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Match-score</h3>
+          <p>AI оценивает, насколько вакансия подходит именно твоему резюме.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">⚖️</div>
+          <h3>Плюсы и минусы</h3>
+          <p>Краткий разбор каждого отклика — решай осознанно, а не наугад.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">✉️</div>
+          <h3>Письма за минуту</h3>
+          <p>Сопроводительное под вакансию — сгенерируй и улучши одной фразой.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">☀️</div>
+          <h3>Утренний дайджест</h3>
+          <p>Лучшие вакансии по твоим фильтрам — каждое утро в Pro.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <h2 class="section-title">Как начать</h2>
+      <p class="section-sub">Пять шагов до первого отклика</p>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p>Открой бота в Telegram</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p>Отправь резюме текстом</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p>Введи запрос: Python backend</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p>Выбери вакансию из топа</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p>Получи сопроводительное письмо</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <h2 class="section-title">Тарифы</h2>
+      <p class="section-sub">Начни бесплатно — расширь лимиты с Pro</p>
+      <div class="plans">
+        <div class="plan-card">
+          <h3>Free</h3>
+          <p class="plan-price">0 ₽</p>
+          <ul class="plan-features">
+            <li>5 поисков в неделю</li>
+            <li>1 сопроводительное письмо</li>
+            <li>Базовые фильтры поиска</li>
+          </ul>
+        </div>
+        <div class="plan-card pro">
+          <span class="plan-badge">Популярный</span>
+          <h3>Pro</h3>
+          <p class="plan-price">от 490 ₽</p>
+          <ul class="plan-features">
+            <li>100 поисков в неделю</li>
+            <li>50 сопроводительных писем</li>
+            <li>Утренний дайджест вакансий</li>
+            <li>Расширенные фильтры</li>
+          </ul>
+        </div>
+      </div>
+      <div class="hero-actions" style="margin-top: 32px">
+        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">
+          Открыть @HHSearchVacanciesBot
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
       <p>AI — помощник для поиска работы, не гарантия трудоустройства.</p>
       <p>Резюме обрабатывается для подбора вакансий (152-ФЗ).</p>
-      <p><a href="/requisites" style="color:#38bdf8">Реквизиты и контакты</a></p>
+      <div class="footer-links">
+        <a href="/requisites">Реквизиты и контакты</a>
+        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Telegram-бот</a>
+      </div>
     </footer>
-  </div>
+  </main>
 </body>
 </html>
