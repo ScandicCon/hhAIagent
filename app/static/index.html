@@ -19,6 +19,7 @@
     <div class="nav-links">
       <a href="#features">Возможности</a>
       <a href="#pricing">Тарифы</a>
+      <a href="#payment">Оплата</a>
       <a href="/requisites">Реквизиты</a>
       <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
     </div>
@@ -115,7 +116,8 @@
         <div class="plan-card pro">
           <span class="plan-badge">Популярный</span>
           <h3>Pro</h3>
-          <p class="plan-price">от 490 ₽</p>
+          <p class="plan-price">490 ₽</p>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin:-8px 0 12px">фиксированная цена за тариф Pro</p>
           <ul class="plan-features">
             <li>100 поисков в неделю</li>
             <li>50 сопроводительных писем</li>
@@ -124,10 +126,66 @@
           </ul>
         </div>
       </div>
+
+      <div class="info-card" style="margin-top:24px">
+        <h2 style="font-size:1.1rem;margin-bottom:12px">Прайс-лист (фиксированные цены)</h2>
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Услуга / тариф</th>
+              <th>Цена</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Тариф Free — базовый доступ к боту</td>
+              <td>0 ₽</td>
+            </tr>
+            <tr>
+              <td>Тариф Pro — расширенные лимиты и дайджест в Telegram-боте</td>
+              <td>490 ₽</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div class="hero-actions" style="margin-top: 32px">
         <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">
           Открыть @HHSearchVacanciesBot
         </a>
+      </div>
+    </section>
+
+    <section class="section" id="payment">
+      <h2 class="section-title">Как принимаются платежи</h2>
+      <p class="section-sub">
+        Сайт информирует о сервисе и ценах. Оплата — за цифровую подписку Pro в Telegram-боте через ЮKassa.
+        Корзина на сайте не используется: товар один (тариф Pro), выбор — в боте.
+      </p>
+      <div class="info-card">
+        <div class="payment-steps">
+          <div class="payment-step">
+            <strong>1</strong>
+            <p>Пользователь открывает Telegram-бот <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a> и нажимает «Купить Pro» (490 ₽).</p>
+          </div>
+          <div class="payment-step">
+            <strong>2</strong>
+            <p>Бот создаёт платёж через API ЮKassa и показывает кнопку «Оплатить 490 ₽» — переход на защищённую страницу ЮKassa.</p>
+          </div>
+          <div class="payment-step">
+            <strong>3</strong>
+            <p>Клиент оплачивает картой или СБП на стороне ЮKassa. Сайт api.hhsearch.ru не хранит данные карт.</p>
+          </div>
+          <div class="payment-step">
+            <strong>4</strong>
+            <p>После успешной оплаты ЮKassa отправляет webhook на наш сервер; тариф Pro активируется в боте автоматически.</p>
+          </div>
+        </div>
+        <p class="payment-note">
+          Техническая интеграция: API ЮKassa (создание платежа), HTTP-уведомление
+          <code style="color:var(--accent-2)">/payments/yookassa/webhook</code>.
+          Возврат в бот после оплаты — по ссылке Telegram.
+        </p>
       </div>
     </section>
 

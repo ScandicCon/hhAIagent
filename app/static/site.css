@@ -501,6 +501,83 @@ a:hover {
   background: var(--accent);
 }
 
+/* Payment / prices table */
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.price-table th,
+.price-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.price-table td:last-child {
+  font-weight: 700;
+  color: var(--accent-2);
+  white-space: nowrap;
+}
+
+.price-table tr:last-child td {
+  border-bottom: none;
+}
+
+.payment-steps {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.payment-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.payment-step strong {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 50%;
+  color: var(--accent-2);
+}
+
+.payment-step p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.payment-note {
+  margin-top: 16px;
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: var(--radius-sm);
+}
+
 /* Footer */
 .footer {
   margin-top: 64px;
