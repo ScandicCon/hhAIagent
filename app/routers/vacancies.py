@@ -5,6 +5,7 @@ from app.services.hh_service import search_vacancies, get_vacancy_by_id
 from app.services.ai_service import analyze_vacancy
 from app.schemas.vacancies import VacancySearchRequest, VacancySearchResponse
 from app.services.limits import (
+    ensure_search_allowed,
     register_cover_letter,
     register_search,
     usage_payload,
@@ -111,12 +112,7 @@ def get_best_vacancies_for_profile(
 
     previous_query = profile.last_search_query
     previous_filters = profile.last_search_filters
-    register_search(
-        profile,
-        request.text,
-        session,
-        search_filters_json=filters_to_json(request.filters),
-    )
+    ensure_search_allowed(profile)
 
     result_count = request.per_page or VACANCY_RESULTS_COUNT
 
@@ -129,6 +125,13 @@ def get_best_vacancies_for_profile(
         previous_query=previous_query,
         filters=request.filters,
         previous_filters_json=previous_filters,
+    )
+
+    register_search(
+        profile,
+        request.text,
+        session,
+        search_filters_json=filters_to_json(request.filters),
     )
 
     return VacancySearchResponse(

@@ -21,6 +21,33 @@ from app.services.search_filters import VacancySearchFilters, filters_to_json
 logger = logging.getLogger(__name__)
 
 
+def _analysis_to_result(
+    db_analysis: VacancyAnalysis,
+    vacancy: Vacancy,
+    full_vacancy: dict,
+    *,
+    cached: bool,
+) -> dict:
+    return {
+        "analysis_id": db_analysis.id,
+        "hh_id": vacancy.hh_id,
+        "title": vacancy.title,
+        "company": vacancy.company,
+        "url": vacancy.url,
+        "experience": full_vacancy.get("experience"),
+        "schedule": full_vacancy.get("schedule"),
+        "employment": full_vacancy.get("employment"),
+        "area": full_vacancy.get("area"),
+        "salary": full_vacancy.get("salary"),
+        "match_score": db_analysis.match_score,
+        "should_apply": db_analysis.should_apply,
+        "summary": db_analysis.summary,
+        "pros": json.loads(db_analysis.pros),
+        "cons": json.loads(db_analysis.cons),
+        "cached": cached,
+    }
+
+
 def _analyzed_hh_ids(profile_id: int, session: Session) -> set[str]:
     rows = session.execute(
         select(Vacancy.hh_id)
@@ -145,6 +172,16 @@ def find_best_vacancies(
         ).scalar_one_or_none()
 
         if existing_analysis:
+            results.append(
+                _analysis_to_result(
+                    existing_analysis,
+                    vacancy,
+                    full_vacancy,
+                    cached=True,
+                )
+            )
+            if len(results) >= per_page:
+                break
             continue
 
         logger.info("Calling AI for: %s", full_vacancy["title"])
@@ -181,24 +218,11 @@ def find_best_vacancies(
         session.commit()
         session.refresh(db_analysis)
 
-        results.append({
-            "analysis_id": db_analysis.id,
-            "hh_id": vacancy.hh_id,
-            "title": vacancy.title,
-            "company": vacancy.company,
-            "url": vacancy.url,
-            "experience": full_vacancy.get("experience"),
-            "schedule": full_vacancy.get("schedule"),
-            "employment": full_vacancy.get("employment"),
-            "area": full_vacancy.get("area"),
-            "salary": full_vacancy.get("salary"),
-            "match_score": analysis.match_score,
-            "should_apply": analysis.should_apply,
-            "summary": analysis.summary,
-            "pros": analysis.pros,
-            "cons": analysis.cons,
-            "cached": False,
-        })
+        results.append(
+            _analysis_to_result(db_analysis, vacancy, full_vacancy, cached=False)
+        )
+        if len(results) >= per_page:
+            break
 
     results.sort(key=lambda item: item["match_score"], reverse=True)
     return results

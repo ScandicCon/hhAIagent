@@ -7,8 +7,12 @@ class VacancyAnalysis(Base):
     __tablename__ = "vacancy_analyses"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=False)
-    vacancy_id: Mapped[int] = mapped_column(ForeignKey("vacancies.id"), nullable=False)
+    profile_id: Mapped[int] = mapped_column(
+        ForeignKey("profiles.id"), nullable=False, index=True
+    )
+    vacancy_id: Mapped[int] = mapped_column(
+        ForeignKey("vacancies.id"), nullable=False, index=True
+    )
     match_score: Mapped[int] = mapped_column(nullable=False)
     should_apply: Mapped[bool] = mapped_column(nullable=False)
     summary: Mapped[str] = mapped_column(Text, nullable=False)

@@ -13,6 +13,15 @@ logger = logging.getLogger(__name__)
 HH_REQUEST_TIMEOUT_SEC = 30
 HH_REQUEST_RETRIES = 3
 
+_hh_session: requests.Session | None = None
+
+
+def _get_hh_session() -> requests.Session:
+    global _hh_session
+    if _hh_session is None:
+        _hh_session = requests.Session()
+    return _hh_session
+
 
 def get_hh_headers(*, force_token_refresh: bool = False) -> dict:
     access_token = get_hh_app_token(force_refresh=force_token_refresh)
@@ -29,7 +38,7 @@ def _hh_get(url: str, *, params: dict | None = None) -> requests.Response:
 
     for attempt in range(1, HH_REQUEST_RETRIES + 1):
         try:
-            response = requests.get(
+            response = _get_hh_session().get(
                 url,
                 params=params,
                 headers=get_hh_headers(force_token_refresh=refreshed_token),

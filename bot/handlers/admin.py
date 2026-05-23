@@ -7,7 +7,7 @@ from httpx import HTTPStatusError, RequestError
 from bot.config import ADMIN_API_KEY, ADMIN_TELEGRAM_IDS, BACKEND_URL
 from bot.handlers.common import reply_backend_error
 from bot.keyboards import BTN_ADMIN, main_menu_keyboard
-from bot.services.http_client import async_client
+from bot.services.http_client import get_http_client
 from bot.utils.usage_text import format_usage
 
 router = Router()
@@ -33,10 +33,11 @@ def is_admin(telegram_id: int) -> bool:
 
 
 async def _profile_id_by_telegram(telegram_id: int) -> int | None:
-    async with async_client(timeout=15) as client:
-        response = await client.get(
-            f"{BACKEND_URL}/profiles/telegram/{telegram_id}",
-        )
+    client = get_http_client()
+    response = await client.get(
+        f"{BACKEND_URL}/profiles/telegram/{telegram_id}",
+        timeout=15.0,
+    )
     if response.status_code == 404:
         return None
     response.raise_for_status()
@@ -44,21 +45,23 @@ async def _profile_id_by_telegram(telegram_id: int) -> int | None:
 
 
 async def _admin_post(path: str) -> dict:
-    async with async_client(timeout=15) as client:
-        response = await client.post(
-            f"{BACKEND_URL}{path}",
-            headers={"X-Admin-Key": ADMIN_API_KEY},
-        )
+    client = get_http_client()
+    response = await client.post(
+        f"{BACKEND_URL}{path}",
+        headers={"X-Admin-Key": ADMIN_API_KEY},
+        timeout=15.0,
+    )
     response.raise_for_status()
     return response.json()
 
 
 async def _admin_get(path: str) -> dict:
-    async with async_client(timeout=15) as client:
-        response = await client.get(
-            f"{BACKEND_URL}{path}",
-            headers={"X-Admin-Key": ADMIN_API_KEY},
-        )
+    client = get_http_client()
+    response = await client.get(
+        f"{BACKEND_URL}{path}",
+        headers={"X-Admin-Key": ADMIN_API_KEY},
+        timeout=15.0,
+    )
     response.raise_for_status()
     return response.json()
 
@@ -181,10 +184,11 @@ async def admin_user_info(message: Message):
         return
 
     try:
-        async with async_client(timeout=15) as client:
-            usage_response = await client.get(
-                f"{BACKEND_URL}/subscription/usage/{profile_id}",
-            )
+        client = get_http_client()
+        usage_response = await client.get(
+            f"{BACKEND_URL}/subscription/usage/{profile_id}",
+            timeout=15.0,
+        )
         usage_response.raise_for_status()
         usage = usage_response.json()
     except (HTTPStatusError, RequestError) as error:

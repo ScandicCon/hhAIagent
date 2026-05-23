@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -84,6 +86,7 @@ def list_digest_recipients(
 ):
     _require_admin_key(x_admin_key)
 
+    today = datetime.utcnow().date()
     profiles = session.execute(
         select(Profile).where(
             Profile.digest_enabled.is_(True),
@@ -93,6 +96,8 @@ def list_digest_recipients(
 
     recipients = []
     for profile in profiles:
+        if profile.last_digest_at and profile.last_digest_at.date() >= today:
+            continue
         if not profile.name.startswith("tg_"):
             continue
         telegram_id = profile.name.removeprefix("tg_")
@@ -108,6 +113,19 @@ def list_digest_recipients(
         )
 
     return recipients
+
+
+@router.post("/digest-mark/{profile_id}")
+def mark_digest_sent(
+    profile_id: int,
+    session: Session = Depends(get_db),
+    x_admin_key: str | None = Header(default=None),
+):
+    _require_admin_key(x_admin_key)
+    profile = _get_profile(profile_id, session)
+    profile.last_digest_at = datetime.utcnow()
+    session.commit()
+    return {"ok": True, "profile_id": profile.id}
 
 
 @router.post("/activate-pro/{profile_id}", response_model=UsageResponse)

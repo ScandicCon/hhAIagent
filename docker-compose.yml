@@ -26,6 +26,9 @@ services:
     environment:
       API_HOST: "0.0.0.0"
       API_PORT: "8000"
+      UVICORN_WORKERS: ${UVICORN_WORKERS:-2}
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
+      DB_MAX_OVERFLOW: ${DB_MAX_OVERFLOW:-20}
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://hh:${POSTGRES_PASSWORD:-hh}@db:5432/hh_agent}
     volumes:
       - hh_data:/app/data
@@ -48,6 +51,7 @@ services:
       - .env
     environment:
       BACKEND_URL: "http://api:8000"
+      DIGEST_CONCURRENCY: ${DIGEST_CONCURRENCY:-3}
       # На VPS оставь пустым в .env; локально на Windows: socks5://host.docker.internal:10808
       TELEGRAM_PROXY: ${TELEGRAM_PROXY:-}
       NO_PROXY: "api,localhost,127.0.0.1,db"

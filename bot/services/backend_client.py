@@ -1,7 +1,7 @@
 import httpx
 
 from bot.config import BACKEND_URL
-from bot.services.http_client import async_client
+from bot.services.http_client import get_http_client
 
 
 def profile_name(telegram_id: int) -> str:
@@ -21,12 +21,12 @@ async def upsert_profile(
     if referral_code:
         payload["referral_code"] = referral_code
 
-    async with async_client(timeout=30) as client:
-        response = await client.post(
-            f"{BACKEND_URL}/profiles/upsert",
-            json=payload,
-        )
-
+    client = get_http_client()
+    response = await client.post(
+        f"{BACKEND_URL}/profiles/upsert",
+        json=payload,
+        timeout=30.0,
+    )
     response.raise_for_status()
     return response.json()
 
@@ -44,42 +44,42 @@ async def find_best_vacancies(
     if filters:
         payload["filters"] = filters
 
-    async with async_client(timeout=180) as client:
-        response = await client.post(
-            f"{BACKEND_URL}/vacancies/best/{profile_id}",
-            json=payload,
-        )
-
+    client = get_http_client()
+    response = await client.post(
+        f"{BACKEND_URL}/vacancies/best/{profile_id}",
+        json=payload,
+        timeout=180.0,
+    )
     response.raise_for_status()
     return response.json()
 
 
 async def get_analyses(profile_id: int) -> list[dict]:
-    async with async_client(timeout=30) as client:
-        response = await client.get(
-            f"{BACKEND_URL}/vacancies/analyses/{profile_id}",
-        )
-
+    client = get_http_client()
+    response = await client.get(
+        f"{BACKEND_URL}/vacancies/analyses/{profile_id}",
+        timeout=30.0,
+    )
     response.raise_for_status()
     return response.json()
 
 
 async def create_cover_letter(analysis_id: int) -> dict:
-    async with async_client(timeout=120) as client:
-        response = await client.post(
-            f"{BACKEND_URL}/vacancies/cover-letter/{analysis_id}",
-        )
-
+    client = get_http_client()
+    response = await client.post(
+        f"{BACKEND_URL}/vacancies/cover-letter/{analysis_id}",
+        timeout=120.0,
+    )
     response.raise_for_status()
     return response.json()
 
 
 async def improve_cover_letter(cover_letter_id: int, instruction: str) -> dict:
-    async with async_client(timeout=120) as client:
-        response = await client.post(
-            f"{BACKEND_URL}/vacancies/cover-letter/{cover_letter_id}/improve",
-            json={"instruction": instruction},
-        )
-
+    client = get_http_client()
+    response = await client.post(
+        f"{BACKEND_URL}/vacancies/cover-letter/{cover_letter_id}/improve",
+        json={"instruction": instruction},
+        timeout=120.0,
+    )
     response.raise_for_status()
     return response.json()

@@ -4,7 +4,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
-from bot.handlers.promo import send_pro_checkout
+from bot.services.checkout import send_pro_checkout
 from bot.keyboards import main_menu_keyboard
 from bot.services.backend_client import upsert_profile
 from bot.services.subscription_client import get_usage
