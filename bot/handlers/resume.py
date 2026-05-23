@@ -4,6 +4,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
+from bot.handlers.promo import send_pro_checkout
 from bot.keyboards import main_menu_keyboard
 from bot.services.backend_client import upsert_profile
 from bot.services.subscription_client import get_usage
@@ -78,3 +79,7 @@ async def resume_handler(message: Message, state: FSMContext):
         parse_mode="HTML",
         reply_markup=main_menu_keyboard(message.from_user.id),
     )
+
+    if data.get("pending_pay"):
+        await state.update_data(pending_pay=False)
+        await send_pro_checkout(message, state)

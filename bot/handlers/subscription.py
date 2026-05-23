@@ -12,6 +12,7 @@ from bot.keyboards import (
     main_menu_keyboard,
 )
 from bot.services.subscription_client import get_usage, toggle_digest
+from bot.utils.product_cards import format_product_catalog
 from bot.utils.usage_text import format_usage, upgrade_message
 
 
@@ -40,8 +41,9 @@ async def show_plan(message: Message, state: FSMContext):
         f"Утренний дайджест: <b>{digest_hint}</b>\n\n"
         f"{upgrade_message()}",
         parse_mode="HTML",
-        reply_markup=main_menu_keyboard(),
+        reply_markup=main_menu_keyboard(message.from_user.id),
     )
+    await message.answer(format_product_catalog(), parse_mode="HTML")
 
 
 @router.message(F.text == BTN_DIGEST_ON)

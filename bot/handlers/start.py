@@ -11,31 +11,35 @@ from bot.texts import HELP_TEXT
 router = Router()
 
 
-def _parse_referral_code(text: str | None) -> str | None:
+def _parse_start_payload(text: str | None) -> tuple[str | None, str | None]:
     if not text:
-        return None
+        return None, None
     parts = text.split(maxsplit=1)
     if len(parts) < 2:
-        return None
+        return None, None
     arg = parts[1].strip()
-    if arg.lower().startswith("ref_"):
-        return arg[4:]
-    return None
+    lower = arg.lower()
+    if lower.startswith("ref_"):
+        return "referral", arg[4:]
+    if lower == "pay":
+        return "pay", None
+    return None, None
 
 
 @router.message(CommandStart())
 async def start_handler(message: Message, state: FSMContext):
-    referral_code = _parse_referral_code(message.text)
+    kind, value = _parse_start_payload(message.text)
     await state.clear()
 
-    if referral_code:
-        await state.update_data(pending_referral_code=referral_code)
+    invite_hint = ""
+    if kind == "referral" and value:
+        await state.update_data(pending_referral_code=value)
+        invite_hint = "\n\nПо ссылке друга — после сохранения резюме он получит бонусные поиски."
+    elif kind == "pay":
+        await state.update_data(pending_pay=True)
+        invite_hint = "\n\nПосле резюме откроется оплата тарифа Pro (490 ₽)."
 
     await state.set_state(UserFlow.waiting_resume)
-
-    invite_hint = ""
-    if referral_code:
-        invite_hint = "\n\nПо ссылке друга — после сохранения резюме он получит бонусные поиски."
 
     await message.answer(
         "Привет! Я AI-бот для поиска вакансий на hh.ru.\n\n"

@@ -18,6 +18,11 @@ def requisites_page():
     return FileResponse(STATIC_DIR / "requisites.html")
 
 
+@router.get("/pay")
+def pay_page():
+    return FileResponse(STATIC_DIR / "pay.html")
+
+
 @router.get("/assets/site.css")
 def site_styles():
     return FileResponse(STATIC_DIR / "site.css", media_type="text/css")
