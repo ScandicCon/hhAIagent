@@ -2,202 +2,210 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#09090b" />
   <meta name="description" content="AI-поиск вакансий на hh.ru: оценка резюме, match-score, сопроводительные письма в Telegram" />
-  <title>HH AI Agent — умный поиск работы</title>
+  <title>HH Search — умный поиск работы</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
-  <nav class="nav">
-    <a class="nav-brand" href="/welcome">
-      <span class="nav-logo">⚡</span>
-      HH AI Agent
-    </a>
-    <div class="nav-links">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/welcome">
+        <span class="brand-mark">HS</span>
+        HH Search
+      </a>
+      <nav class="nav-desktop" aria-label="Основное меню">
+        <a href="#features">Возможности</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#payment">Оплата</a>
+        <a href="/requisites">Реквизиты</a>
+        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="nav-mobile" id="nav-mobile" aria-label="Мобильное меню">
       <a href="#features">Возможности</a>
       <a href="#pricing">Тарифы</a>
       <a href="#payment">Оплата</a>
       <a href="/pay">Оплатить Pro</a>
       <a href="/requisites">Реквизиты</a>
       <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
-    </div>
-  </nav>
+    </nav>
+  </header>
 
   <main class="container">
     <section class="hero">
-      <div class="badge">
-        <span class="badge-dot"></span>
-        AI · hh.ru · Telegram
-      </div>
-      <h1>
-        Найди работу на <span class="gradient">hh.ru</span> за 10 минут в день
-      </h1>
+      <span class="eyebrow">AI · hh.ru · Telegram</span>
+      <h1>Работа на <em>hh.ru</em> без бесконечного скролла</h1>
       <p class="hero-lead">
-        Отправь резюме в бот — получи топ вакансий с оценкой совпадения
-        и готовые сопроводительные письма. Без бесконечного скролла.
+        Отправьте резюме в Telegram-бот — получите подборку вакансий с оценкой совпадения
+        и готовые сопроводительные письма.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">
-          Попробовать бесплатно
-        </a>
-        <a class="btn btn-ghost" href="#how">Как это работает</a>
+        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Попробовать бесплатно</a>
+        <a class="btn btn-secondary" href="#how">Как это работает</a>
       </div>
     </section>
 
     <section class="section" id="features">
-      <h2 class="section-title">Почему это удобно</h2>
-      <p class="section-sub">Всё в Telegram — без лишних вкладок и регистраций</p>
-      <div class="features">
+      <div class="section-head">
+        <h2>Возможности</h2>
+        <p>Всё в одном боте — без лишних регистраций и вкладок.</p>
+      </div>
+      <div class="feature-grid">
         <article class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h3>Match-score</h3>
-          <p>AI оценивает, насколько вакансия подходит именно твоему резюме.</p>
+          <span class="num">01</span>
+          <h3>Оценка совпадения</h3>
+          <p>Match-score показывает, насколько вакансия подходит вашему резюме.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon">⚖️</div>
-          <h3>Плюсы и минусы</h3>
-          <p>Краткий разбор каждого отклика — решай осознанно, а не наугад.</p>
+          <span class="num">02</span>
+          <h3>Анализ отклика</h3>
+          <p>Краткие плюсы и минусы — решайте осознанно, а не наугад.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon">✉️</div>
-          <h3>Письма за минуту</h3>
-          <p>Сопроводительное под вакансию — сгенерируй и улучши одной фразой.</p>
+          <span class="num">03</span>
+          <h3>Сопроводительные</h3>
+          <p>Письмо под вакансию за минуту, с возможностью доработать текст.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon">☀️</div>
-          <h3>Утренний дайджест</h3>
-          <p>Лучшие вакансии по твоим фильтрам — каждое утро в Pro.</p>
+          <span class="num">04</span>
+          <h3>Дайджест</h3>
+          <p>Лучшие вакансии по вашим фильтрам — каждое утро в тарифе Pro.</p>
         </article>
       </div>
     </section>
 
     <section class="section" id="how">
-      <h2 class="section-title">Как начать</h2>
-      <p class="section-sub">Пять шагов до первого отклика</p>
-      <div class="steps">
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <p>Открой бота в Telegram</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <p>Отправь резюме текстом</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <p>Введи запрос: Python backend</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">4</div>
-          <p>Выбери вакансию из топа</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">5</div>
-          <p>Получи сопроводительное письмо</p>
-        </div>
+      <div class="section-head">
+        <h2>Как начать</h2>
+        <p>Пять шагов до первого отклика.</p>
       </div>
+      <ol class="step-list">
+        <li class="step-item"><p>Откройте бота в Telegram</p></li>
+        <li class="step-item"><p>Отправьте резюме текстом</p></li>
+        <li class="step-item"><p>Введите запрос, например Python backend</p></li>
+        <li class="step-item"><p>Выберите вакансию из подборки</p></li>
+        <li class="step-item"><p>Сгенерируйте сопроводительное письмо</p></li>
+      </ol>
     </section>
 
     <section class="section" id="pricing">
-      <h2 class="section-title">Тарифы</h2>
-      <p class="section-sub">Начни бесплатно — расширь лимиты с Pro</p>
-      <div class="plans">
+      <div class="section-head">
+        <h2>Тарифы</h2>
+        <p>Фиксированные цены. Начните бесплатно, расширьте лимиты с Pro.</p>
+      </div>
+      <div class="plan-grid">
         <div class="plan-card">
           <h3>Free</h3>
           <p class="plan-price">0 ₽</p>
           <ul class="plan-features">
             <li>5 поисков в неделю</li>
             <li>1 сопроводительное письмо</li>
-            <li>Базовые фильтры поиска</li>
+            <li>Базовые фильтры</li>
           </ul>
         </div>
-        <div class="plan-card pro">
-          <span class="plan-badge">Популярный</span>
+        <div class="plan-card featured">
+          <p class="plan-label">Рекомендуем</p>
           <h3>Pro</h3>
           <p class="plan-price">490 ₽</p>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin:-8px 0 12px">фиксированная цена за тариф Pro</p>
+          <p class="plan-note">Фиксированная цена за тариф Pro</p>
           <ul class="plan-features">
             <li>100 поисков в неделю</li>
             <li>50 сопроводительных писем</li>
-            <li>Утренний дайджест вакансий</li>
+            <li>Утренний дайджест</li>
             <li>Расширенные фильтры</li>
           </ul>
         </div>
       </div>
 
-      <div class="info-card" style="margin-top:24px">
-        <h2 style="font-size:1.1rem;margin-bottom:12px">Прайс-лист (фиксированные цены)</h2>
-        <table class="price-table">
-          <thead>
-            <tr>
-              <th>Услуга / тариф</th>
-              <th>Цена</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Тариф Free — базовый доступ к боту</td>
-              <td>0 ₽</td>
-            </tr>
-            <tr>
-              <td>Тариф Pro — расширенные лимиты и дайджест в Telegram-боте</td>
-              <td>490 ₽</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="hero-actions" style="margin-top: 32px">
-        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">
-          Открыть @HHSearchVacanciesBot
-        </a>
+      <div class="card" style="margin-top: 20px">
+        <h3>Прайс-лист</h3>
+        <div class="price-table-wrap">
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Услуга</th>
+                <th>Цена</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Тариф Free — базовый доступ</td>
+                <td>0 ₽</td>
+              </tr>
+              <tr>
+                <td>Тариф Pro — расширенные лимиты в боте</td>
+                <td>490 ₽</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="price-cards">
+          <div class="price-row-mobile">
+            <span>Тариф Free</span>
+            <span>0 ₽</span>
+          </div>
+          <div class="price-row-mobile">
+            <span>Тариф Pro</span>
+            <span>490 ₽</span>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="section" id="payment">
-      <h2 class="section-title">Как принимаются платежи</h2>
-      <p class="section-sub">
-        Сайт информирует о сервисе и ценах. Оплата — за цифровую подписку Pro в Telegram-боте через ЮKassa.
-        Корзина на сайте не используется: товар один (тариф Pro), выбор — в боте.
-      </p>
-      <div class="info-card">
-        <div class="payment-steps">
-          <div class="payment-step">
-            <strong>1</strong>
-            <p>Пользователь открывает Telegram-бот <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a> и нажимает «Купить Pro» (490 ₽).</p>
+      <div class="section-head">
+        <h2>Оплата</h2>
+        <p>Цифровая подписка Pro. Корзина на сайте не используется — один товар, оформление в боте или на странице оплаты.</p>
+      </div>
+      <div class="card">
+        <div class="payment-flow">
+          <div class="flow-step">
+            <span class="n">1</span>
+            <p>В боте <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a> нажмите «Купить Pro» — 490 ₽.</p>
           </div>
-          <div class="payment-step">
-            <strong>2</strong>
-            <p>Бот создаёт платёж через API ЮKassa и показывает кнопку «Оплатить 490 ₽» — переход на защищённую страницу ЮKassa.</p>
+          <div class="flow-step">
+            <span class="n">2</span>
+            <p>Бот создаёт платёж в ЮKassa и открывает защищённую страницу оплаты.</p>
           </div>
-          <div class="payment-step">
-            <strong>3</strong>
-            <p>Клиент оплачивает картой или СБП на стороне ЮKassa. Сайт api.hhsearch.ru не хранит данные карт.</p>
+          <div class="flow-step">
+            <span class="n">3</span>
+            <p>Оплата картой или СБП. Данные карты обрабатывает ЮKassa.</p>
           </div>
-          <div class="payment-step">
-            <strong>4</strong>
-            <p>После успешной оплаты ЮKassa отправляет webhook на наш сервер; тариф Pro активируется в боте автоматически.</p>
+          <div class="flow-step">
+            <span class="n">4</span>
+            <p>После оплаты тариф Pro активируется автоматически в боте.</p>
           </div>
         </div>
-        <p class="payment-note">
-          Оплата на сайте: <a href="/pay">api.hhsearch.ru/pay</a> (490 ₽, переход на ЮKassa).
-          В боте: «Купить Pro» или /buy. Webhook:
-          <code style="color:var(--accent-2)">/payments/yookassa/webhook</code>.
+        <p class="callout">
+          Оплата на сайте: <a href="/pay">страница оплаты</a>.
+          Webhook: <code>/payments/yookassa/webhook</code>
         </p>
       </div>
     </section>
 
-    <footer class="footer">
-      <p>AI — помощник для поиска работы, не гарантия трудоустройства.</p>
+    <footer class="site-footer">
+      <p>Сервис — помощник в поиске работы, не гарантия трудоустройства.</p>
       <p>Резюме обрабатывается для подбора вакансий (152-ФЗ).</p>
-      <div class="footer-links">
-        <a href="/requisites">Реквизиты и контакты</a>
-        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Telegram-бот</a>
-      </div>
+      <nav class="footer-nav">
+        <a href="/requisites">Реквизиты</a>
+        <a href="/pay">Оплата Pro</a>
+        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Telegram</a>
+      </nav>
     </footer>
   </main>
+
+  <div class="mobile-cta">
+    <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+  </div>
+
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

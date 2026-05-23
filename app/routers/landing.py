@@ -26,3 +26,8 @@ def pay_page():
 @router.get("/assets/site.css")
 def site_styles():
     return FileResponse(STATIC_DIR / "site.css", media_type="text/css")
+
+
+@router.get("/assets/site.js")
+def site_scripts():
+    return FileResponse(STATIC_DIR / "site.js", media_type="application/javascript")

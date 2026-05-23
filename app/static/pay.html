@@ -2,88 +2,94 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Оплата Pro — HH AI Agent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#09090b" />
+  <title>Оплата Pro — HH Search</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
-  <nav class="nav">
-    <a class="nav-brand" href="/welcome">
-      <span class="nav-logo">⚡</span>
-      HH AI Agent
-    </a>
-    <div class="nav-links">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/welcome">
+        <span class="brand-mark">HS</span>
+        HH Search
+      </a>
+      <nav class="nav-desktop" aria-label="Основное меню">
+        <a href="/welcome">Главная</a>
+        <a href="/requisites">Реквизиты</a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="nav-mobile" id="nav-mobile" aria-label="Мобильное меню">
       <a href="/welcome">Главная</a>
       <a href="/requisites">Реквизиты</a>
-    </div>
-  </nav>
+      <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+    </nav>
+  </header>
 
   <main class="container page-main">
-    <header class="page-header">
-      <h1>Оплата тарифа Pro</h1>
-      <p>Фиксированная цена. Оплата через защищённую страницу ЮKassa.</p>
-    </header>
+    <h1 class="page-title">Оплата Pro</h1>
+    <p class="page-intro">Фиксированная цена 490 ₽. Переход на защищённую страницу ЮKassa.</p>
 
-    <div class="info-grid">
-      <section class="info-card">
-        <h2><span>🛒</span> Товар</h2>
-        <table class="price-table">
-          <tbody>
-            <tr>
-              <td><strong>Тариф Pro</strong> — цифровая подписка в Telegram-боте</td>
-              <td>490 ₽</td>
-            </tr>
-          </tbody>
-        </table>
-        <p style="margin-top:16px;color:var(--text-muted);font-size:0.92rem">
-          100 поисков в неделю · 50 сопроводительных писем · утренний дайджест
+    <div class="stack">
+      <section class="card">
+        <h2>Тариф</h2>
+        <div class="price-row-mobile" style="margin-top:0">
+          <span><strong>Pro</strong> — подписка в Telegram-боте</span>
+          <span>490 ₽</span>
+        </div>
+        <p class="card-lead" style="margin-top:16px;margin-bottom:0">
+          100 поисков в неделю · 50 писем · утренний дайджест
         </p>
       </section>
 
-      <section class="info-card">
-        <h2><span>💳</span> Перейти к оплате</h2>
-        <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:16px">
+      <section class="card">
+        <h2>Оплатить</h2>
+        <p class="card-lead">
           Сначала зарегистрируйтесь в боте
           <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>
-          (/start и резюме). Узнать ID: команда /myid в боте.
+          (команда /start и резюме). ID узнайте командой /myid.
         </p>
-        <form class="pay-form" action="/payments/go/telegram" method="get">
-          <label for="telegram_id" style="display:block;margin-bottom:8px;color:var(--text-muted);font-size:0.9rem">
-            Ваш Telegram ID
-          </label>
-          <input
-            id="telegram_id"
-            name="telegram_id"
-            type="number"
-            required
-            min="1"
-            placeholder="Например: 123456789"
-            style="width:100%;max-width:320px;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,0.3);color:var(--text);font-size:1rem;margin-bottom:16px"
-          />
-          <button type="submit" class="btn btn-primary">Оплатить 490 ₽</button>
+        <form action="/payments/go/telegram" method="get">
+          <div class="form-field">
+            <label for="telegram_id">Telegram ID</label>
+            <input
+              class="form-input"
+              id="telegram_id"
+              name="telegram_id"
+              type="number"
+              required
+              min="1"
+              placeholder="123456789"
+              inputmode="numeric"
+              autocomplete="off"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Оплатить 490 ₽</button>
         </form>
-        <p class="payment-note" style="margin-top:20px">
-          Вы будете перенаправлены на страницу оплаты ЮKassa. Данные карты обрабатывает ЮKassa.
+        <p class="callout" style="margin-top:20px">
+          Данные карты обрабатывает ЮKassa. Сайт не хранит платёжные реквизиты.
         </p>
       </section>
     </div>
 
-    <footer class="footer">
-      <div class="footer-links">
-        <a href="/welcome">← На главную</a>
-        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Telegram-бот</a>
-      </div>
+    <footer class="site-footer">
+      <nav class="footer-nav">
+        <a href="/welcome">Главная</a>
+        <a href="/requisites">Реквизиты</a>
+      </nav>
     </footer>
   </main>
+
+  <script src="/assets/site.js" defer></script>
   <script>
-    const params = new URLSearchParams(location.search);
-    const tg = params.get("tg");
-    if (tg) {
-      document.getElementById("telegram_id").value = tg;
-    }
+    const tg = new URLSearchParams(location.search).get("tg");
+    if (tg) document.getElementById("telegram_id").value = tg;
   </script>
 </body>
 </html>

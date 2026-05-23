@@ -2,37 +2,47 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Реквизиты и контакты продавца HH AI Agent" />
-  <title>Реквизиты — HH AI Agent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#09090b" />
+  <meta name="description" content="Реквизиты и контакты HH Search" />
+  <title>Реквизиты — HH Search</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
-  <nav class="nav">
-    <a class="nav-brand" href="/welcome">
-      <span class="nav-logo">⚡</span>
-      HH AI Agent
-    </a>
-    <div class="nav-links">
-      <a href="/welcome">Главная</a>
-      <a href="/requisites">Реквизиты</a>
-      <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Бот в Telegram</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/welcome">
+        <span class="brand-mark">HS</span>
+        HH Search
+      </a>
+      <nav class="nav-desktop" aria-label="Основное меню">
+        <a href="/welcome">Главная</a>
+        <a href="/pay">Оплата</a>
+        <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Бот</a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-  </nav>
+    <nav class="nav-mobile" id="nav-mobile" aria-label="Мобильное меню">
+      <a href="/welcome">Главная</a>
+      <a href="/pay">Оплата Pro</a>
+      <a href="/requisites">Реквизиты</a>
+      <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+    </nav>
+  </header>
 
   <main class="container page-main">
-    <header class="page-header">
-      <h1>Реквизиты и сведения о продавце</h1>
-      <p>Информация для оплаты подписки Pro и обращений по сервису HH AI Agent.</p>
-    </header>
+    <h1 class="page-title">Реквизиты</h1>
+    <p class="page-intro">Сведения о продавце, ценах и порядке оплаты подписки Pro.</p>
 
-    <div class="info-grid">
-      <section class="info-card">
-        <h2><span>👤</span> Продавец</h2>
-        <dl>
+    <div class="stack">
+      <section class="card">
+        <h2>Продавец</h2>
+        <dl class="dl">
           <div class="dl-row">
             <dt>ФИО</dt>
             <dd>Долгушев Даниил Максимович</dd>
@@ -48,52 +58,60 @@
         </dl>
       </section>
 
-      <section class="info-card">
-        <h2><span>💼</span> Услуга</h2>
-        <p style="color: var(--text-muted); margin-bottom: 12px;">
-          Цифровая подписка <strong style="color: var(--text)">Pro</strong> к сервису HH AI Agent —
-          поиск и AI-анализ вакансий на hh.ru в Telegram-боте
-          <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>.
+      <section class="card">
+        <h2>Услуга и цены</h2>
+        <p class="card-lead">
+          Цифровая подписка Pro к сервису HH Search — поиск и AI-анализ вакансий на hh.ru
+          в боте <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>.
         </p>
-        <table class="price-table">
-          <thead>
-            <tr>
-              <th>Наименование</th>
-              <th>Цена</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Тариф Free</td>
-              <td>0 ₽</td>
-            </tr>
-            <tr>
-              <td>Тариф Pro (цифровая подписка в боте)</td>
-              <td>490 ₽</td>
-            </tr>
-          </tbody>
-        </table>
-        <ul style="margin-top:16px">
-          <li>Оплата только тарифа Pro — 490 ₽, фиксированная цена</li>
-          <li>Оформление: кнопка «Купить Pro» в Telegram-боте → страница оплаты ЮKassa</li>
-          <li>Корзина на сайте не предусмотрена (один цифровой товар)</li>
-          <li>Доступ активируется автоматически после успешной оплаты</li>
+        <div class="price-table-wrap">
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Наименование</th>
+                <th>Цена</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Тариф Free</td>
+                <td>0 ₽</td>
+              </tr>
+              <tr>
+                <td>Тариф Pro</td>
+                <td>490 ₽</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="price-cards">
+          <div class="price-row-mobile">
+            <span>Тариф Free</span>
+            <span>0 ₽</span>
+          </div>
+          <div class="price-row-mobile">
+            <span>Тариф Pro</span>
+            <span>490 ₽</span>
+          </div>
+        </div>
+        <ul class="bullet-list">
+          <li>Оплата тарифа Pro — 490 ₽, фиксированная цена</li>
+          <li>Оформление в боте: «Купить Pro» → страница ЮKassa</li>
+          <li>Доступ активируется после успешной оплаты</li>
         </ul>
       </section>
 
-      <section class="info-card">
-        <h2><span>💳</span> Приём платежей</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px;">
-          Сайт <a href="/welcome">api.hhsearch.ru</a> публикует описание услуги и цены.
-          Платёж принимается через интеграцию ЮKassa при покупке Pro в боте
-          <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>:
-          пользователь получает ссылку на оплату 490 ₽, после подтверждения платежа услуга предоставляется в Telegram.
+      <section class="card">
+        <h2>Приём платежей</h2>
+        <p class="card-lead">
+          Сайт публикует описание услуги и цены. Платёж принимается через ЮKassa
+          при покупке Pro в Telegram-боте или на <a href="/pay">странице оплаты</a>.
         </p>
       </section>
 
-      <section class="info-card">
-        <h2><span>📬</span> Контакты</h2>
-        <dl>
+      <section class="card">
+        <h2>Контакты</h2>
+        <dl class="dl">
           <div class="dl-row">
             <dt>Email</dt>
             <dd><a href="mailto:support@example.com">support@example.com</a></dd>
@@ -105,21 +123,28 @@
         </dl>
       </section>
 
-      <section class="info-card">
-        <h2><span>↩️</span> Возврат и поддержка</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem;">
-          Услуга оказывается в электронном виде сразу после оплаты. По вопросам оплаты,
-          доступа к тарифу Pro и работы бота — напишите в Telegram или на email выше.
+      <section class="card">
+        <h2>Возврат и поддержка</h2>
+        <p class="card-lead">
+          Услуга оказывается в электронном виде сразу после оплаты.
+          По вопросам оплаты и доступа — Telegram или email выше.
         </p>
       </section>
     </div>
 
-    <footer class="footer">
-      <div class="footer-links">
-        <a href="/welcome">← На главную</a>
-        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
-      </div>
+    <footer class="site-footer">
+      <nav class="footer-nav">
+        <a href="/welcome">Главная</a>
+        <a href="/pay">Оплата</a>
+        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Telegram</a>
+      </nav>
     </footer>
   </main>
+
+  <div class="mobile-cta">
+    <a class="btn btn-primary" href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Открыть бота</a>
+  </div>
+
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>
