@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Оплата Pro — HH AI Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="nav-brand" href="/welcome">
+      <span class="nav-logo">⚡</span>
+      HH AI Agent
+    </a>
+    <div class="nav-links">
+      <a href="/welcome">Главная</a>
+      <a href="/requisites">Реквизиты</a>
+    </div>
+  </nav>
+
+  <main class="container page-main">
+    <header class="page-header">
+      <h1>Оплата тарифа Pro</h1>
+      <p>Фиксированная цена. Оплата через защищённую страницу ЮKassa.</p>
+    </header>
+
+    <div class="info-grid">
+      <section class="info-card">
+        <h2><span>🛒</span> Товар</h2>
+        <table class="price-table">
+          <tbody>
+            <tr>
+              <td><strong>Тариф Pro</strong> — цифровая подписка в Telegram-боте</td>
+              <td>490 ₽</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top:16px;color:var(--text-muted);font-size:0.92rem">
+          100 поисков в неделю · 50 сопроводительных писем · утренний дайджест
+        </p>
+      </section>
+
+      <section class="info-card">
+        <h2><span>💳</span> Перейти к оплате</h2>
+        <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:16px">
+          Сначала зарегистрируйтесь в боте
+          <a href="https://t.me/HHSearchVacanciesBot">@HHSearchVacanciesBot</a>
+          (/start и резюме). Узнать ID: команда /myid в боте.
+        </p>
+        <form class="pay-form" action="/payments/go/telegram" method="get">
+          <label for="telegram_id" style="display:block;margin-bottom:8px;color:var(--text-muted);font-size:0.9rem">
+            Ваш Telegram ID
+          </label>
+          <input
+            id="telegram_id"
+            name="telegram_id"
+            type="number"
+            required
+            min="1"
+            placeholder="Например: 123456789"
+            style="width:100%;max-width:320px;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,0.3);color:var(--text);font-size:1rem;margin-bottom:16px"
+          />
+          <button type="submit" class="btn btn-primary">Оплатить 490 ₽</button>
+        </form>
+        <p class="payment-note" style="margin-top:20px">
+          Вы будете перенаправлены на страницу оплаты ЮKassa. Данные карты обрабатывает ЮKassa.
+        </p>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="/welcome">← На главную</a>
+        <a href="https://t.me/HHSearchVacanciesBot" target="_blank" rel="noopener">Telegram-бот</a>
+      </div>
+    </footer>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const tg = params.get("tg");
+    if (tg) {
+      document.getElementById("telegram_id").value = tg;
+    }
+  </script>
+</body>
+</html>
