@@ -55,6 +55,14 @@ services:
       # На VPS оставь пустым в .env; локально на Windows: socks5://host.docker.internal:10808
       TELEGRAM_PROXY: ${TELEGRAM_PROXY:-}
       NO_PROXY: "api,localhost,127.0.0.1,db"
+      # Не пускать Telegram через случайный HTTP_PROXY из .env
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      http_proxy: ""
+      https_proxy: ""
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:

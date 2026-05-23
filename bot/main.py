@@ -1,7 +1,9 @@
 import asyncio
 import logging
+import socket
 import sys
 
+import aiohttp
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -41,7 +43,18 @@ async def main() -> None:
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
 
-    session = AiohttpSession(proxy=TELEGRAM_PROXY) if TELEGRAM_PROXY else AiohttpSession()
+    # IPv4 + без системного HTTP_PROXY из .env (частая причина timeout в Docker на VPS)
+    connector = aiohttp.TCPConnector(family=socket.AF_INET)
+    session_kwargs = {
+        "connector": connector,
+        "trust_env": False,
+        "timeout": aiohttp.ClientTimeout(total=30),
+    }
+    session = (
+        AiohttpSession(proxy=TELEGRAM_PROXY, **session_kwargs)
+        if TELEGRAM_PROXY
+        else AiohttpSession(**session_kwargs)
+    )
     bot = Bot(
         token=BOT_TOKEN,
         session=session,
@@ -52,9 +65,11 @@ async def main() -> None:
         me = await bot.get_me()
         logging.info("Bot connected: @%s", me.username)
     except TelegramNetworkError as error:
+        await session.close()
         logging.error(
             "Cannot reach Telegram API (api.telegram.org). "
-            "Use VPN or set TELEGRAM_PROXY in .env. Error: %s",
+            "From host: curl https://api.telegram.org — if OK, rebuild bot image. "
+            "Or set TELEGRAM_PROXY in .env. Error: %s",
             error,
         )
         raise SystemExit(1) from error
