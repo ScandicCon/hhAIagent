@@ -8,7 +8,7 @@ from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
 from bot.keyboards import BTN_MY_RESUME, BTN_RESUME_HISTORY, main_menu_keyboard
-from bot.services.backend_client import get_resume_versions
+from bot.services.backend_client import get_profile_by_telegram, get_resume_versions
 from bot.services.profile_session import ensure_profile_id
 from bot.utils.formatters import escape_html, split_message
 
@@ -45,12 +45,12 @@ async def show_my_resume(message: Message, state: FSMContext):
         return
 
     try:
-        data = await get_resume_versions(message.from_user.id)
+        profile = await get_profile_by_telegram(message.from_user.id)
     except (HTTPStatusError, RequestError) as error:
         await reply_backend_error(message, error)
         return
 
-    current = (data.get("current") or "").strip()
+    current = (profile.get("resume_text") or "").strip()
     if not current:
         await message.answer("Резюме пустое. Нажми «Обновить резюме» и отправь текст.")
         return
@@ -76,7 +76,19 @@ async def show_resume_history(message: Message, state: FSMContext):
 
     try:
         data = await get_resume_versions(message.from_user.id)
-    except (HTTPStatusError, RequestError) as error:
+    except HTTPStatusError as error:
+        if error.response.status_code == 404 and "Not Found" in (error.response.text or ""):
+            await message.answer(
+                "История резюме недоступна: на сервере нужно обновить API.\n\n"
+                "На VPS выполни:\n"
+                "<code>docker compose build --pull=false api bot</code>\n"
+                "<code>docker compose up -d --force-recreate api bot</code>",
+                parse_mode="HTML",
+            )
+            return
+        await reply_backend_error(message, error)
+        return
+    except RequestError as error:
         await reply_backend_error(message, error)
         return
 
