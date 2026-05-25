@@ -50,17 +50,34 @@ async def main() -> None:
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
 
-    try:
-        me = await bot.get_me()
-        logging.info("Bot connected: @%s", me.username)
-    except TelegramNetworkError as error:
+    me = None
+    last_error: TelegramNetworkError | None = None
+    for attempt in range(1, 6):
+        try:
+            me = await bot.get_me()
+            break
+        except TelegramNetworkError as error:
+            last_error = error
+            wait_sec = min(attempt * 5, 25)
+            logging.warning(
+                "Telegram API attempt %s/5 failed (%s). Retry in %ss...",
+                attempt,
+                error,
+                wait_sec,
+            )
+            await asyncio.sleep(wait_sec)
+
+    if me is None:
         await session.close()
         logging.error(
             "Cannot reach Telegram API (api.telegram.org). "
-            "Or set TELEGRAM_PROXY in .env. Error: %s",
-            error,
+            "Check: curl from host/container, TELEGRAM_PROXY in .env. "
+            "Last error: %s",
+            last_error,
         )
-        raise SystemExit(1) from error
+        raise SystemExit(1) from last_error
+
+    logging.info("Bot connected: @%s", me.username)
     dp = Dispatcher(storage=MemoryStorage())
 
     dp.include_router(admin.router)
