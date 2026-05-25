@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.profiles import Profile
 from app.schemas.profiles import ProfileCreate, ProfileResponse
+from app.schemas.resume_versions import ResumeVersionItem, ResumeVersionsResponse
 from app.services.referrals import apply_referral, ensure_referral_code
+from app.services.resume_versions import archive_current_resume, list_resume_versions
 
 router = APIRouter(prefix="/profiles", tags=["profiles"])
 
@@ -45,6 +47,8 @@ def upsert_profile(data: ProfileCreate, session: Session = Depends(get_db)):
         profile = session.execute(stmt).scalar_one_or_none()
 
         if profile:
+            if profile.resume_text.strip() != data.resume_text.strip():
+                archive_current_resume(profile.id, profile.resume_text, session)
             profile.resume_text = data.resume_text
             profile.skills = skills
             session.commit()
@@ -75,6 +79,30 @@ def upsert_profile(data: ProfileCreate, session: Session = Depends(get_db)):
     except SQLAlchemyError as error:
         session.rollback()
         raise HTTPException(status_code=500, detail=str(error)) from error
+
+@router.get(
+    "/telegram/{telegram_id}/resume-versions",
+    response_model=ResumeVersionsResponse,
+)
+def get_resume_versions(telegram_id: int, session: Session = Depends(get_db)):
+    stmt = select(Profile).where(Profile.name == f"tg_{telegram_id}")
+    profile = session.execute(stmt).scalar_one_or_none()
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    versions = list_resume_versions(profile.id, session)
+    return ResumeVersionsResponse(
+        current=profile.resume_text,
+        versions=[
+            ResumeVersionItem(
+                id=item.id,
+                resume_text=item.resume_text,
+                created_at=item.created_at,
+            )
+            for item in versions
+        ],
+    )
+
 
 @router.get("/telegram/{telegram_id}", response_model=ProfileResponse)
 def get_profile_by_telegram(telegram_id: int, session: Session = Depends(get_db)):

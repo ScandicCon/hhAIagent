@@ -8,6 +8,26 @@ def profile_name(telegram_id: int) -> str:
     return f"tg_{telegram_id}"
 
 
+async def get_profile_by_telegram(telegram_id: int) -> dict:
+    client = get_http_client()
+    response = await client.get(
+        f"{BACKEND_URL}/profiles/telegram/{telegram_id}",
+        timeout=15.0,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+async def get_resume_versions(telegram_id: int) -> dict:
+    client = get_http_client()
+    response = await client.get(
+        f"{BACKEND_URL}/profiles/telegram/{telegram_id}/resume-versions",
+        timeout=15.0,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
 async def upsert_profile(
     telegram_id: int,
     resume_text: str,

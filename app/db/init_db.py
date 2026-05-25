@@ -8,6 +8,7 @@ from app.models import (  # noqa: F401
     cover_letter_versions,
     cover_letters,
     profiles,
+    resume_versions,
     vacancies,
     vacancy_analyses,
 )

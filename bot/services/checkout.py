@@ -4,16 +4,16 @@ from httpx import HTTPStatusError, RequestError
 
 from bot.config import PRO_CONTACT, PRO_PRICE_RUB, YOOKASSA_ENABLED
 from bot.handlers.common import reply_backend_error
+from bot.services.profile_session import ensure_profile_id
 from bot.keyboards import main_menu_keyboard
 from bot.services.payments_client import create_pro_payment
 from bot.utils.product_cards import format_pro_checkout_card
 
 
 async def send_pro_checkout(message: Message, state: FSMContext) -> None:
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await message.answer(
             "Сначала отправь резюме через /start — затем снова «Купить Pro».",
             reply_markup=main_menu_keyboard(message.from_user.id),

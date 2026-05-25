@@ -4,7 +4,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.config import BACKEND_URL
-from bot.utils.usage_text import upgrade_message
+from bot.utils.usage_text import upgrade_hint
 
 
 async def reply_backend_error(message: Message, error: Exception) -> None:
@@ -18,13 +18,16 @@ async def reply_backend_error(message: Message, error: Exception) -> None:
                 detail_obj = payload.get("detail", payload)
                 if isinstance(detail_obj, dict):
                     message_text = detail_obj.get("message", "Лимит исчерпан")
+                    usage = detail_obj.get("usage")
                 else:
                     message_text = str(detail_obj)
+                    usage = None
             except json.JSONDecodeError:
                 message_text = "Лимит исчерпан"
+                usage = None
 
             await message.answer(
-                f"{message_text}\n\n{upgrade_message()}",
+                f"{message_text}\n\n{upgrade_hint(usage)}",
                 parse_mode="HTML",
             )
             return

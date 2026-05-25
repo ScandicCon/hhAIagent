@@ -58,11 +58,12 @@ async def resume_handler(message: Message, state: FSMContext):
         if referral_code:
             referral_note = "\n\n✅ Реферальный код друга учтён — ему начислены бонусные поиски."
 
+    was_update = data.get("profile_id") is not None
     update = {"profile_id": profile["id"]}
     if referral_code:
         update["pending_referral_code"] = None
     await state.update_data(**update)
-    await state.set_state(UserFlow.waiting_search)
+    await state.set_state(None)
 
     try:
         usage = await get_usage(profile["id"])
@@ -70,12 +71,19 @@ async def resume_handler(message: Message, state: FSMContext):
     except (HTTPStatusError, RequestError):
         usage_line = ""
 
+    if was_update:
+        saved_text = (
+            "Резюме обновлено. Предыдущая версия — в «История резюме».\n\n"
+            "Нажми «Искать вакансии», когда будешь готов."
+        )
+    else:
+        saved_text = (
+            "Резюме сохранил — больше вводить его не нужно.\n\n"
+            "Нажми «Искать вакансии» или /search, когда будешь готов."
+        )
+
     await message.answer(
-        "Резюме сохранил.\n\n"
-        "Напиши поисковый запрос или нажми «Искать вакансии».\n"
-        "Например: Python backend"
-        f"{referral_note}"
-        f"{usage_line}",
+        f"{saved_text}{referral_note}{usage_line}",
         parse_mode="HTML",
         reply_markup=main_menu_keyboard(message.from_user.id),
     )

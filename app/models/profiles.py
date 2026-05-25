@@ -40,3 +40,4 @@ class Profile(Base):
     applications_day: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     vacancy_analyses = relationship("VacancyAnalysis", back_populates="profile")
+    resume_versions = relationship("ResumeVersion", back_populates="profile")

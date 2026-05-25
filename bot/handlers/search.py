@@ -6,6 +6,7 @@ from httpx import HTTPStatusError, RequestError
 from app.services.hh_areas import POPULAR_AREAS, resolve_area_by_name
 from app.services.search_filters import VacancySearchFilters
 from bot.handlers.common import reply_backend_error
+from bot.services.profile_session import ensure_profile_id
 from bot.keyboards import main_menu_keyboard, vacancy_inline_keyboard
 from bot.keyboards_search import SF_GO, search_filters_keyboard
 from bot.services.backend_client import find_best_vacancies
@@ -39,10 +40,9 @@ async def _run_search(
     search_text: str,
     filters: VacancySearchFilters,
 ) -> None:
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await state.set_state(UserFlow.waiting_resume)
         await message.answer("Сначала отправь резюме через /start.")
         return
@@ -121,14 +121,13 @@ async def _run_search(
 @router.message(UserFlow.waiting_search)
 async def search_query_handler(message: Message, state: FSMContext):
     search_text = (message.text or "").strip()
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
     if not search_text:
         await message.answer("Введи текст запроса, например: Python backend")
         return
 
-    if not profile_id:
+    if profile_id is None:
         await state.set_state(UserFlow.waiting_resume)
         await message.answer("Сначала отправь резюме через /start.")
         return

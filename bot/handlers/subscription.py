@@ -5,6 +5,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
+from bot.services.profile_session import ensure_profile_id
 from bot.keyboards import (
     BTN_DIGEST_OFF,
     BTN_DIGEST_ON,
@@ -13,7 +14,7 @@ from bot.keyboards import (
 )
 from bot.services.subscription_client import get_usage, toggle_digest
 from bot.utils.product_cards import format_product_catalog
-from bot.utils.usage_text import format_usage, upgrade_message
+from bot.utils.usage_text import format_usage, upgrade_hint
 
 
 router = Router()
@@ -22,10 +23,9 @@ router = Router()
 @router.message(Command("plan"))
 @router.message(F.text == BTN_PLAN)
 async def show_plan(message: Message, state: FSMContext):
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await message.answer("Сначала отправь резюме через /start.")
         return
 
@@ -39,7 +39,7 @@ async def show_plan(message: Message, state: FSMContext):
     await message.answer(
         f"{format_usage(usage)}\n\n"
         f"Утренний дайджест: <b>{digest_hint}</b>\n\n"
-        f"{upgrade_message()}",
+        f"{upgrade_hint(usage)}",
         parse_mode="HTML",
         reply_markup=main_menu_keyboard(message.from_user.id),
     )
@@ -57,10 +57,9 @@ async def digest_off(message: Message, state: FSMContext):
 
 
 async def _set_digest(message: Message, state: FSMContext, enabled: bool) -> None:
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await message.answer("Сначала отправь резюме через /start.")
         return
 
@@ -75,5 +74,5 @@ async def _set_digest(message: Message, state: FSMContext, enabled: bool) -> Non
         f"Дайджест {status} (каждый день в 9:00 МСК).\n\n"
         f"{format_usage(usage)}",
         parse_mode="HTML",
-        reply_markup=main_menu_keyboard(),
+        reply_markup=main_menu_keyboard(message.from_user.id),
     )

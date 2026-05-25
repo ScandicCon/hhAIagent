@@ -6,7 +6,9 @@ from aiogram.types import (
 )
 
 BTN_SEARCH = "🔍 Искать вакансии"
-BTN_RESUME = "📄 Обновить резюме"
+BTN_MY_RESUME = "📄 Моё резюме"
+BTN_RESUME = "✏️ Обновить резюме"
+BTN_RESUME_HISTORY = "📚 История резюме"
 BTN_ANALYSES = "📋 Мои анализы"
 BTN_HELP = "ℹ️ Помощь"
 BTN_PLAN = "💳 Тариф"
@@ -25,7 +27,8 @@ def main_menu_keyboard(telegram_id: int | None = None) -> ReplyKeyboardMarkup:
     from bot.config import ADMIN_TELEGRAM_IDS
 
     rows = [
-        [KeyboardButton(text=BTN_SEARCH), KeyboardButton(text=BTN_RESUME)],
+        [KeyboardButton(text=BTN_SEARCH), KeyboardButton(text=BTN_MY_RESUME)],
+        [KeyboardButton(text=BTN_RESUME), KeyboardButton(text=BTN_RESUME_HISTORY)],
         [KeyboardButton(text=BTN_ANALYSES), KeyboardButton(text=BTN_PLAN)],
         [KeyboardButton(text=BTN_BUY_PRO), KeyboardButton(text=BTN_INVITE)],
     ]

@@ -5,6 +5,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
+from bot.services.profile_session import ensure_profile_id
 from bot.keyboards import BTN_ANALYSES, vacancy_inline_keyboard
 from bot.services.backend_client import get_analyses
 from bot.utils.formatters import format_vacancy_card, split_message
@@ -14,10 +15,9 @@ router = Router()
 
 
 async def send_analyses_list(message: Message, state: FSMContext) -> None:
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await message.answer("Сначала отправь резюме через /start.")
         return
 

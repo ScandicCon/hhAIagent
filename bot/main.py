@@ -20,6 +20,7 @@ from bot.handlers import (
     menu,
     promo,
     resume,
+    resume_view,
     search,
     start,
     subscription,
@@ -69,6 +70,7 @@ async def main() -> None:
     dp.include_router(invite.router)
     dp.include_router(analyses.router)
     dp.include_router(menu.router)
+    dp.include_router(resume_view.router)
     dp.include_router(resume.router)
     dp.include_router(search.router)
     dp.include_router(callbacks.router)

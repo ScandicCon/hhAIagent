@@ -5,6 +5,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
+from bot.services.profile_session import ensure_profile_id
 from bot.keyboards import BTN_BUY_PRO, main_menu_keyboard
 from bot.services.checkout import send_pro_checkout
 from bot.services.subscription_client import get_usage, redeem_promo
@@ -40,10 +41,9 @@ async def promo_command(message: Message, state: FSMContext):
 
 
 async def _redeem(message: Message, state: FSMContext, code: str) -> None:
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await message.answer("Сначала отправь резюме через /start.")
         return
 

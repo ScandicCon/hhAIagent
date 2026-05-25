@@ -5,6 +5,7 @@ from aiogram.types import Message
 from httpx import HTTPStatusError, RequestError
 
 from bot.handlers.common import reply_backend_error
+from bot.services.profile_session import ensure_profile_id
 from bot.keyboards import BTN_INVITE, main_menu_keyboard
 from bot.services.payments_client import get_referral_info
 
@@ -14,10 +15,9 @@ router = Router()
 @router.message(Command("invite"))
 @router.message(F.text == BTN_INVITE)
 async def invite_handler(message: Message, state: FSMContext):
-    data = await state.get_data()
-    profile_id = data.get("profile_id")
+    profile_id = await ensure_profile_id(state, message.from_user.id)
 
-    if not profile_id:
+    if profile_id is None:
         await message.answer("Сначала отправь резюме через /start.")
         return
 
@@ -36,5 +36,5 @@ async def invite_handler(message: Message, state: FSMContext):
         f"Приглашено: {info['invited_count']}\n"
         f"Бонусных поисков сейчас: {info['bonus_searches']}",
         parse_mode="HTML",
-        reply_markup=main_menu_keyboard(),
+        reply_markup=main_menu_keyboard(message.from_user.id),
     )

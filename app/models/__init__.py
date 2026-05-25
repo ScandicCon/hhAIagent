@@ -1,6 +1,7 @@
 from app.models.hh_applications import HhApplication
 from app.models.payments import Payment
 from app.models.cover_letter_versions import CoverLetterVersion
+from app.models.resume_versions import ResumeVersion
 from app.models.cover_letters import CoverLetter
 from app.models.profiles import Profile
 from app.models.vacancies import Vacancy
@@ -11,6 +12,7 @@ __all__ = [
     "Payment",
     "CoverLetter",
     "CoverLetterVersion",
+    "ResumeVersion",
     "Profile",
     "Vacancy",
     "VacancyAnalysis",

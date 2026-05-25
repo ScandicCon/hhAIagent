@@ -8,6 +8,7 @@ from bot.keyboards import (
     BTN_SEARCH,
     main_menu_keyboard,
 )
+from bot.services.profile_session import ensure_profile_id
 from bot.states.user_states import UserFlow
 from bot.texts import HELP_TEXT
 
@@ -22,17 +23,24 @@ async def menu_help(message: Message):
 
 @router.message(F.text == BTN_RESUME)
 async def menu_resume(message: Message, state: FSMContext):
+    profile_id = await ensure_profile_id(state, message.from_user.id)
+    if profile_id is None:
+        await state.set_state(UserFlow.waiting_resume)
+        await message.answer("Сначала отправь резюме через /start.")
+        return
+
     await state.set_state(UserFlow.waiting_resume)
     await message.answer(
-        "Отправь резюме текстом. Старое резюме будет заменено.",
-        reply_markup=main_menu_keyboard(),
+        "Отправь новый текст резюме.\n"
+        "Текущая версия попадёт в «История резюме».",
+        reply_markup=main_menu_keyboard(message.from_user.id),
     )
 
 
 @router.message(F.text == BTN_SEARCH)
 async def menu_search(message: Message, state: FSMContext):
-    data = await state.get_data()
-    if not data.get("profile_id"):
+    profile_id = await ensure_profile_id(state, message.from_user.id)
+    if profile_id is None:
         await state.set_state(UserFlow.waiting_resume)
         await message.answer("Сначала отправь резюме.")
         return
@@ -42,6 +50,6 @@ async def menu_search(message: Message, state: FSMContext):
         "Напиши профессию или стек для поиска.\n"
         "Например: Python backend\n\n"
         "На следующем шаге: уровень, опыт, удалёнка, город и зарплата.",
-        reply_markup=main_menu_keyboard(),
+        reply_markup=main_menu_keyboard(message.from_user.id),
     )
 
