@@ -118,7 +118,7 @@ async def _run_search(
             )
 
 
-@router.message(UserFlow.waiting_search)
+@router.message(UserFlow.waiting_search, ~F.text.startswith("/"))
 async def search_query_handler(message: Message, state: FSMContext):
     search_text = (message.text or "").strip()
     profile_id = await ensure_profile_id(state, message.from_user.id)

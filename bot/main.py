@@ -15,6 +15,7 @@ from bot.handlers import (
     analyses,
     callbacks,
     fallback,
+    fsm_commands,
     hh,
     invite,
     menu,
@@ -63,6 +64,7 @@ async def main() -> None:
     dp = Dispatcher(storage=MemoryStorage())
 
     dp.include_router(admin.router)
+    dp.include_router(fsm_commands.router)
     dp.include_router(start.router)
     dp.include_router(subscription.router)
     dp.include_router(promo.router)
