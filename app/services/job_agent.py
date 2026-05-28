@@ -17,7 +17,9 @@ from app.models.vacancy_analyses import VacancyAnalysis
 from fastapi import HTTPException
 
 from app.services.ai_service import analyze_vacancy
+from app.services.apply_modes import APPLY_MODE_AUTO
 from app.services.hh_service import get_vacancy_by_id, search_vacancies
+from app.services.hh_user_service import try_auto_apply_after_analysis
 from app.services.search_filters import VacancySearchFilters, filters_to_json
 
 logger = logging.getLogger(__name__)
@@ -239,15 +241,9 @@ def find_best_vacancies(
         session.commit()
         session.refresh(db_analysis)
 
-        if profile_id is not None:
+        if profile and getattr(profile, "apply_mode", "semi_auto") == APPLY_MODE_AUTO:
             try:
-                from app.models.profiles import Profile
-                from app.services.apply_modes import APPLY_MODE_AUTO
-                from app.services.hh_user_service import try_auto_apply_after_analysis
-
-                profile = session.get(Profile, profile_id)
-                if profile and getattr(profile, "apply_mode", "semi_auto") == APPLY_MODE_AUTO:
-                    try_auto_apply_after_analysis(profile, session, db_analysis)
+                try_auto_apply_after_analysis(profile, session, db_analysis)
             except Exception:
                 logger.exception("Auto-apply skipped for analysis %s", db_analysis.id)
 
