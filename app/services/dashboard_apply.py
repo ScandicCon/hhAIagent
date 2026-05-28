@@ -1,10 +1,10 @@
-import json
 import logging
 from datetime import datetime
 
 from fastapi import HTTPException
+from openai import APIStatusError, RateLimitError
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.config.settings import AUTO_APPLY_DAILY_LIMIT
 from app.models.cover_letters import CoverLetter
@@ -13,7 +13,7 @@ from app.models.profiles import Profile
 from app.models.vacancy_analyses import VacancyAnalysis
 from app.services.ai_service import generate_cover_letter
 from app.services.hh_service import get_vacancy_by_id
-from app.services.hh_user_service import apply_to_vacancy
+from app.services.hh_user_service import _reset_daily_counter_if_needed, apply_to_vacancy
 from app.services.limits import register_cover_letter
 
 logger = logging.getLogger(__name__)
@@ -39,15 +39,37 @@ def _ensure_cover_letter(
     if existing:
         return existing.text
 
-    register_cover_letter(profile, session)
+    try:
+        register_cover_letter(profile, session)
+    except HTTPException:
+        raise
+
     vacancy = analysis.vacancy
-    full_vacancy = get_vacancy_by_id(vacancy.hh_id)
-    generated = generate_cover_letter(
-        resume=profile.resume_text,
-        vacancy_title=vacancy.title,
-        company=vacancy.company,
-        vacancy_description=full_vacancy["description"],
-    )
+    if vacancy is None:
+        raise HTTPException(status_code=404, detail="Вакансия не найдена в базе")
+
+    try:
+        full_vacancy = get_vacancy_by_id(vacancy.hh_id)
+        generated = generate_cover_letter(
+            resume=profile.resume_text,
+            vacancy_title=vacancy.title,
+            company=vacancy.company,
+            vacancy_description=full_vacancy.get("description") or "",
+        )
+    except (RateLimitError, APIStatusError):
+        raise HTTPException(
+            status_code=503,
+            detail="AI временно перегружен. Подожди 1–2 минуты и повтори.",
+        ) from None
+    except HTTPException:
+        raise
+    except Exception as error:
+        logger.exception("Cover letter generation failed")
+        raise HTTPException(
+            status_code=502,
+            detail=f"Не удалось сгенерировать письмо: {error}",
+        ) from error
+
     letter = CoverLetter(
         analysis_id=analysis.id,
         text=generated.cover_letter,
@@ -77,11 +99,28 @@ def _record_prepared(
     session.commit()
 
 
+def _get_analysis(
+    profile_id: int, analysis_id: int, session: Session
+) -> VacancyAnalysis | None:
+    stmt = (
+        select(VacancyAnalysis)
+        .options(joinedload(VacancyAnalysis.vacancy))
+        .where(
+            VacancyAnalysis.id == analysis_id,
+            VacancyAnalysis.profile_id == profile_id,
+        )
+    )
+    return session.execute(stmt).scalar_one_or_none()
+
+
 def process_batch_apply(
     profile: Profile,
     analysis_ids: list[int],
     session: Session,
 ) -> dict:
+    _reset_daily_counter_if_needed(profile)
+    session.commit()
+
     if profile.applications_today >= AUTO_APPLY_DAILY_LIMIT:
         raise HTTPException(
             status_code=429,
@@ -105,8 +144,8 @@ def process_batch_apply(
             failed += 1
             continue
 
-        analysis = session.get(VacancyAnalysis, analysis_id)
-        if analysis is None or analysis.profile_id != profile.id:
+        analysis = _get_analysis(profile.id, analysis_id, session)
+        if analysis is None:
             results.append(
                 {
                     "analysis_id": analysis_id,
@@ -135,16 +174,21 @@ def process_batch_apply(
         try:
             cover = _ensure_cover_letter(profile, analysis, session)
         except HTTPException as error:
+            detail = error.detail
+            message = detail if isinstance(detail, str) else str(detail)
             results.append(
                 {
                     "analysis_id": analysis_id,
                     "ok": False,
                     "status": "letter_failed",
                     "title": vacancy.title,
-                    "message": str(error.detail),
+                    "message": message,
                 }
             )
             failed += 1
+            if error.status_code in {502, 503}:
+                # AI/внешний сервис — дальше смысла нет
+                break
             continue
 
         hh_ready = bool(profile.hh_access_token and profile.hh_resume_id)

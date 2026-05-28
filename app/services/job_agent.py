@@ -14,11 +14,21 @@ from app.config.settings import (
 from app.models.profiles import Profile
 from app.models.vacancies import Vacancy
 from app.models.vacancy_analyses import VacancyAnalysis
+from fastapi import HTTPException
+
 from app.services.ai_service import analyze_vacancy
 from app.services.hh_service import get_vacancy_by_id, search_vacancies
 from app.services.search_filters import VacancySearchFilters, filters_to_json
 
 logger = logging.getLogger(__name__)
+
+
+def _safe_json_list(raw: str | None) -> list:
+    try:
+        data = json.loads(raw or "[]")
+        return data if isinstance(data, list) else []
+    except (json.JSONDecodeError, TypeError):
+        return []
 
 
 def _analysis_to_result(
@@ -42,8 +52,8 @@ def _analysis_to_result(
         "match_score": db_analysis.match_score,
         "should_apply": db_analysis.should_apply,
         "summary": db_analysis.summary,
-        "pros": json.loads(db_analysis.pros),
-        "cons": json.loads(db_analysis.cons),
+        "pros": _safe_json_list(db_analysis.pros),
+        "cons": _safe_json_list(db_analysis.cons),
         "cached": cached,
     }
 
@@ -147,7 +157,18 @@ def find_best_vacancies(
     for vacancy_data in candidates:
         logger.info("Processing: %s", vacancy_data["title"])
 
-        full_vacancy = get_vacancy_by_id(vacancy_data["hh_id"])
+        try:
+            full_vacancy = get_vacancy_by_id(vacancy_data["hh_id"])
+        except HTTPException as error:
+            logger.warning(
+                "Skip vacancy %s: %s",
+                vacancy_data.get("hh_id"),
+                error.detail,
+            )
+            continue
+        except Exception:
+            logger.exception("HH detail failed for %s", vacancy_data.get("hh_id"))
+            continue
 
         vacancy = session.execute(
             select(Vacancy).where(Vacancy.hh_id == full_vacancy["hh_id"])
@@ -219,13 +240,16 @@ def find_best_vacancies(
         session.refresh(db_analysis)
 
         if profile_id is not None:
-            from app.models.profiles import Profile
-            from app.services.apply_modes import APPLY_MODE_AUTO
-            from app.services.hh_user_service import try_auto_apply_after_analysis
+            try:
+                from app.models.profiles import Profile
+                from app.services.apply_modes import APPLY_MODE_AUTO
+                from app.services.hh_user_service import try_auto_apply_after_analysis
 
-            profile = session.get(Profile, profile_id)
-            if profile and getattr(profile, "apply_mode", "semi_auto") == APPLY_MODE_AUTO:
-                try_auto_apply_after_analysis(profile, session, db_analysis)
+                profile = session.get(Profile, profile_id)
+                if profile and getattr(profile, "apply_mode", "semi_auto") == APPLY_MODE_AUTO:
+                    try_auto_apply_after_analysis(profile, session, db_analysis)
+            except Exception:
+                logger.exception("Auto-apply skipped for analysis %s", db_analysis.id)
 
         results.append(
             _analysis_to_result(db_analysis, vacancy, full_vacancy, cached=False)

@@ -152,7 +152,11 @@ def get_vacancy_by_id(hh_id: str):
 
     preview = _vacancy_preview(item)
     preview.update({
-        "description": item.get("description"),
-        "skills": [skill["name"] for skill in item.get("key_skills", [])],
+        "description": item.get("description") or "",
+        "skills": [
+            skill.get("name")
+            for skill in item.get("key_skills", [])
+            if isinstance(skill, dict) and skill.get("name")
+        ],
     })
     return preview

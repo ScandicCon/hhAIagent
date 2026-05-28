@@ -1,4 +1,7 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException
+from openai import APIStatusError, RateLimitError
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -23,6 +26,7 @@ from app.services.limits import ensure_search_allowed, register_search, usage_pa
 from app.services.job_agent import find_best_vacancies
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+logger = logging.getLogger(__name__)
 
 
 class ResumeUpdateBody(BaseModel):
@@ -63,28 +67,45 @@ def dashboard_search(
     profile: Profile = Depends(get_current_profile),
     session: Session = Depends(get_db),
 ):
-    ensure_search_allowed(profile)
-    previous_query = profile.last_search_query
-    previous_filters = profile.last_search_filters
-    result_count = body.per_page or VACANCY_RESULTS_COUNT
+    if len((profile.resume_text or "").strip()) < 20:
+        raise HTTPException(status_code=400, detail="Сначала заполни резюме в кабинете")
 
-    results = find_best_vacancies(
-        resume=profile.resume_text,
-        search_text=body.text,
-        profile_id=profile.id,
-        session=session,
-        per_page=result_count,
-        previous_query=previous_query,
-        filters=None,
-        previous_filters_json=previous_filters,
-    )
+    try:
+        ensure_search_allowed(profile)
+        previous_query = profile.last_search_query
+        previous_filters = profile.last_search_filters
+        result_count = body.per_page or VACANCY_RESULTS_COUNT
 
-    register_search(profile, body.text, session, search_filters_json=None)
+        results = find_best_vacancies(
+            resume=profile.resume_text,
+            search_text=body.text,
+            profile_id=profile.id,
+            session=session,
+            per_page=result_count,
+            previous_query=previous_query,
+            filters=None,
+            previous_filters_json=previous_filters,
+        )
 
-    return VacancySearchResponse(
-        vacancies=results,
-        usage=usage_payload(profile),
-    )
+        register_search(profile, body.text, session, search_filters_json=None)
+
+        return VacancySearchResponse(
+            vacancies=results,
+            usage=usage_payload(profile),
+        )
+    except HTTPException:
+        raise
+    except (RateLimitError, APIStatusError):
+        raise HTTPException(
+            status_code=503,
+            detail="AI временно перегружен. Подожди 1–2 минуты и повтори поиск.",
+        )
+    except Exception as error:
+        logger.exception("Dashboard search failed for profile %s", profile.id)
+        raise HTTPException(
+            status_code=502,
+            detail=f"Ошибка поиска: {error}",
+        ) from error
 
 
 @router.post("/applications/batch", response_model=BatchApplyResponse)

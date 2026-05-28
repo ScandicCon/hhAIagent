@@ -33,10 +33,13 @@
     }
     if (!res.ok) {
       const detail = data?.detail;
-      const msg =
+      let msg =
         typeof detail === "string"
           ? detail
-          : detail?.message || JSON.stringify(detail) || res.statusText;
+          : detail?.message || (detail ? JSON.stringify(detail) : res.statusText);
+      if (res.status === 500 && msg === "Internal Server Error") {
+        msg = "Ошибка сервера. Попробуй 1–2 отклика или повтори через минуту.";
+      }
       throw new Error(msg);
     }
     return data;
@@ -315,24 +318,38 @@
       showToast("Введи запрос");
       return;
     }
-    showToast("Ищем вакансии… 1–3 мин");
+    showToast("Ищем вакансии… 1–3 мин (не закрывай страницу)");
     try {
-      await api("/dashboard/search", {
+      const result = await api("/dashboard/search", {
         method: "POST",
         body: JSON.stringify({ text, per_page: 7 }),
       });
       $("search-bar").classList.add("hidden");
       selected.clear();
-      await loadDashboard();
-      showToast("Подборка обновлена");
+      const count = result.vacancies?.length ?? 0;
+      try {
+        await loadDashboard();
+        showToast(
+          count
+            ? `Готово: ${count} вакансий в подборке`
+            : "Новых вакансий не нашли — попробуй другой запрос"
+        );
+      } catch (refreshError) {
+        showToast(
+          `Поиск сохранён (${count} шт.), но экран не обновился: ${refreshError.message}`
+        );
+      }
     } catch (e) {
-      showToast(e.message);
+      showToast(e.message || "Ошибка поиска");
     }
   });
 
   $("batch-send")?.addEventListener("click", async () => {
-    if (!selected.size) return;
-    showToast("Готовим отклики…");
+    if (!selected.size) {
+      showToast("Выбери вакансии кнопкой «Выбрать»");
+      return;
+    }
+    showToast("Готовим отклики… (по одному письму, может занять минуту)");
     try {
       const res = await api("/dashboard/applications/batch", {
         method: "POST",
