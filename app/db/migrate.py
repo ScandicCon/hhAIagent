@@ -1,6 +1,10 @@
-from sqlalchemy import inspect, text
+import logging
 
-from app.db.session import engine
+from sqlalchemy import inspect, select, text
+
+from app.db.session import SessionLocal, engine
+
+logger = logging.getLogger(__name__)
 
 PROFILE_COLUMNS = {
     "plan": "VARCHAR(20) NOT NULL DEFAULT 'free'",
@@ -52,17 +56,23 @@ def migrate_apply_mode_defaults() -> None:
     columns = {c["name"] for c in inspector.get_columns("profiles")}
     if "apply_mode" not in columns:
         return
-    # PostgreSQL: boolean, не integer (нельзя `= 1`)
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "UPDATE profiles SET apply_mode = 'auto' "
-                "WHERE auto_apply_enabled IS TRUE "
-                "AND (apply_mode IS NULL OR apply_mode = '')"
-            )
-        )
+
+    from app.models.profiles import Profile
+    from app.services.apply_modes import APPLY_MODE_AUTO
+
+    with SessionLocal() as session:
+        profiles = session.execute(
+            select(Profile).where(Profile.auto_apply_enabled.is_(True))
+        ).scalars().all()
+        for profile in profiles:
+            if profile.apply_mode != APPLY_MODE_AUTO:
+                profile.apply_mode = APPLY_MODE_AUTO
+        session.commit()
 
 
 def migrate_all() -> None:
     migrate_profiles_table()
-    migrate_apply_mode_defaults()
+    try:
+        migrate_apply_mode_defaults()
+    except Exception:
+        logger.exception("migrate_apply_mode_defaults skipped")

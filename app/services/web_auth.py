@@ -74,18 +74,31 @@ def get_or_create_profile(telegram_id: int, session: Session) -> Profile:
 
 
 def create_access_token(profile_id: int, telegram_id: int) -> str:
-    expires = datetime.utcnow() + timedelta(days=JWT_EXPIRE_DAYS)
+    now = datetime.utcnow()
+    expires = now + timedelta(days=JWT_EXPIRE_DAYS)
     payload = {
-        "sub": profile_id,
+        "sub": str(profile_id),
         "tg_id": telegram_id,
-        "exp": expires,
-        "iat": datetime.utcnow(),
+        "exp": int(expires.timestamp()),
+        "iat": int(now.timestamp()),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
 
 def decode_access_token(token: str) -> dict:
+    if not JWT_SECRET or JWT_SECRET == "change-me-jwt-secret":
+        raise HTTPException(
+            status_code=503,
+            detail="JWT_SECRET не задан на сервере — добавь в .env и перезапусти api",
+        )
     try:
-        return jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-    except jwt.PyJWTError as error:
-        raise HTTPException(status_code=401, detail="Сессия недействительна") from error
+        return jwt.decode(
+            token,
+            JWT_SECRET,
+            algorithms=["HS256"],
+            options={"require": ["exp", "sub"]},
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Сессия истекла — войди снова")
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Сессия недействительна")

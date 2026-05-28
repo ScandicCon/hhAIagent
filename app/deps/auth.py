@@ -22,7 +22,7 @@ def get_current_profile(
         raise HTTPException(status_code=401, detail="Требуется вход")
 
     payload = decode_access_token(token)
-    profile_id = int(payload["sub"])
+    profile_id = int(payload.get("sub") or payload.get("profile_id"))
     profile = session.get(Profile, profile_id)
     if profile is None:
         raise HTTPException(status_code=401, detail="Профиль не найден")

@@ -34,7 +34,9 @@ def login_telegram(
     response: Response,
     session: Session = Depends(get_db),
 ):
-    verified = verify_telegram_login(payload.model_dump())
+    verified = verify_telegram_login(
+        payload.model_dump(mode="json", exclude_none=True)
+    )
     telegram_id = verified["telegram_id"]
     profile = get_or_create_profile(telegram_id, session)
     token = create_access_token(profile.id, telegram_id)

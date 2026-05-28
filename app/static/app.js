@@ -209,11 +209,16 @@
     box.innerHTML = "";
     window.onTelegramAuth = async (user) => {
       try {
+        localStorage.removeItem("hh_token");
+        token = "";
         const data = await api("/web/auth/telegram", {
           method: "POST",
           body: JSON.stringify(user),
         });
         token = data.access_token;
+        if (!token) {
+          throw new Error("Сервер не выдал токен");
+        }
         localStorage.setItem("hh_token", token);
         me = data;
         if (!data.resume_ready) {
@@ -222,7 +227,9 @@
           await loadDashboard();
         }
       } catch (e) {
-        showToast(e.message);
+        localStorage.removeItem("hh_token");
+        token = "";
+        showToast(e.message || "Ошибка входа");
       }
     };
     const script = document.createElement("script");
@@ -258,11 +265,14 @@
         return;
       }
       await loadDashboard();
-    } catch {
+    } catch (e) {
       localStorage.removeItem("hh_token");
       token = "";
       showScreen("login-screen");
       initTelegramWidget(botUsername);
+      if (e?.message && !e.message.includes("401")) {
+        showToast(e.message);
+      }
     }
   }
 
