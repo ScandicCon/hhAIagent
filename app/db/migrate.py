@@ -20,6 +20,7 @@ PROFILE_COLUMNS = {
     "hh_token_expires_at": "DATETIME",
     "hh_resume_id": "VARCHAR(64)",
     "hh_resume_title": "VARCHAR(255)",
+    "apply_mode": "VARCHAR(20) NOT NULL DEFAULT 'semi_auto'",
     "auto_apply_enabled": "BOOLEAN NOT NULL DEFAULT 0",
     "applications_today": "INTEGER NOT NULL DEFAULT 0",
     "applications_day": "DATETIME",
@@ -44,5 +45,22 @@ def migrate_profiles_table() -> None:
     _migrate_table("profiles", PROFILE_COLUMNS)
 
 
+def migrate_apply_mode_defaults() -> None:
+    inspector = inspect(engine)
+    if "profiles" not in inspector.get_table_names():
+        return
+    columns = {c["name"] for c in inspector.get_columns("profiles")}
+    if "apply_mode" not in columns:
+        return
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "UPDATE profiles SET apply_mode = 'auto' "
+                "WHERE auto_apply_enabled = 1 AND (apply_mode IS NULL OR apply_mode = '')"
+            )
+        )
+
+
 def migrate_all() -> None:
     migrate_profiles_table()
+    migrate_apply_mode_defaults()

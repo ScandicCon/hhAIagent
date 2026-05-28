@@ -35,6 +35,9 @@ class Profile(Base):
     hh_token_expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     hh_resume_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     hh_resume_title: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    apply_mode: Mapped[str] = mapped_column(
+        String(20), default="semi_auto", nullable=False
+    )
     auto_apply_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     applications_today: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     applications_day: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

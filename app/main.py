@@ -18,6 +18,8 @@ from app.routers.payments import router as payments_router
 from app.routers.referrals import router as referrals_router
 from app.routers.subscription import router as subscription_router
 from app.routers.vacancies import router as vacancies_router
+from app.routers.web_auth import router as web_auth_router
+from app.routers.dashboard import router as dashboard_router
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +43,8 @@ app.include_router(landing_router)
 app.include_router(payments_router)
 app.include_router(referrals_router)
 app.include_router(hh_router)
+app.include_router(web_auth_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")

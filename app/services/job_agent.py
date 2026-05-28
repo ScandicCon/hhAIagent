@@ -218,6 +218,15 @@ def find_best_vacancies(
         session.commit()
         session.refresh(db_analysis)
 
+        if profile_id is not None:
+            from app.models.profiles import Profile
+            from app.services.apply_modes import APPLY_MODE_AUTO
+            from app.services.hh_user_service import try_auto_apply_after_analysis
+
+            profile = session.get(Profile, profile_id)
+            if profile and getattr(profile, "apply_mode", "semi_auto") == APPLY_MODE_AUTO:
+                try_auto_apply_after_analysis(profile, session, db_analysis)
+
         results.append(
             _analysis_to_result(db_analysis, vacancy, full_vacancy, cached=False)
         )

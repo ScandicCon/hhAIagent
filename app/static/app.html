@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Кабинет — HH Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body>
+  <div id="login-screen" class="screen hidden">
+    <div class="login-card">
+      <h1>HH Search</h1>
+      <p class="muted">Войди через Telegram — резюме и отклики в одном кабинете</p>
+      <div id="telegram-login"></div>
+      <p class="hint">Нужен аккаунт Telegram. После входа можно загрузить резюме.</p>
+    </div>
+  </div>
+
+  <div id="resume-screen" class="screen hidden">
+    <div class="login-card wide">
+      <h2>Резюме</h2>
+      <p class="muted">Один раз укажи опыт, стек и проекты (минимум 20 символов)</p>
+      <textarea id="resume-input" rows="12" placeholder="Python backend, FastAPI, PostgreSQL…"></textarea>
+      <button type="button" class="btn btn-primary" id="resume-save">Сохранить и открыть кабинет</button>
+    </div>
+  </div>
+
+  <div id="app-screen" class="screen hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Отклики</h1>
+        <p class="schedule-label" id="schedule-label"></p>
+      </div>
+      <div class="mode-toggle" role="tablist">
+        <button type="button" class="mode-btn" data-mode="auto" id="mode-auto">Авто</button>
+        <button type="button" class="mode-btn active" data-mode="semi_auto" id="mode-semi">Полуавто</button>
+      </div>
+      <div class="topbar-right">
+        <span class="plan-badge" id="plan-badge">Free</span>
+        <button type="button" class="btn btn-ghost btn-sm" id="logout-btn">Выйти</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="kpi-row" id="kpi-row"></section>
+
+      <div class="dashboard-grid">
+        <section class="panel chart-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Суточные отклики</h2>
+              <p class="muted">За последние 14 дней</p>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" id="refresh-search">Новый поиск</button>
+          </div>
+          <div class="chart" id="daily-chart"></div>
+        </section>
+
+        <aside class="panel progress-panel">
+          <h2>Путь к офферу</h2>
+          <p class="muted">Отслеживай прогресс</p>
+          <div class="gauge" id="progress-gauge">
+            <span class="gauge-value" id="progress-value">0%</span>
+          </div>
+          <p class="progress-caption" id="progress-caption">Разгон</p>
+          <p class="muted small" id="applications-left-label"></p>
+        </aside>
+      </div>
+
+      <section class="search-bar hidden" id="search-bar">
+        <input type="text" id="search-input" placeholder="Например: Python backend" />
+        <button type="button" class="btn btn-primary" id="search-run">Искать</button>
+        <button type="button" class="btn btn-ghost" id="search-cancel">Отмена</button>
+      </section>
+
+      <section id="vacancies-root"></section>
+    </main>
+
+    <footer class="batch-bar hidden" id="batch-bar">
+      <span id="batch-count">Выбрано 0</span>
+      <button type="button" class="btn btn-primary" id="batch-send">Отправить отклики</button>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/assets/app.js"></script>
+</body>
+</html>

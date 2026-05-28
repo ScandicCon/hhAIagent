@@ -23,6 +23,21 @@ def pay_page():
     return FileResponse(STATIC_DIR / "pay.html")
 
 
+@router.get("/app")
+def app_dashboard():
+    return FileResponse(STATIC_DIR / "app.html")
+
+
+@router.get("/assets/app.css")
+def app_styles():
+    return FileResponse(STATIC_DIR / "app.css", media_type="text/css")
+
+
+@router.get("/assets/app.js")
+def app_scripts():
+    return FileResponse(STATIC_DIR / "app.js", media_type="application/javascript")
+
+
 @router.get("/assets/site.css")
 def site_styles():
     return FileResponse(STATIC_DIR / "site.css", media_type="text/css")

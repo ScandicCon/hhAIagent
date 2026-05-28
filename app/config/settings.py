@@ -63,6 +63,14 @@ PRO_CONTACT = (os.getenv("PRO_CONTACT") or "@your_username").strip()
 _promo_raw = os.getenv("PROMO_CODES", "LAUNCH2026:pro")
 PUBLIC_URL = (os.getenv("PUBLIC_URL") or BACKEND_URL).strip().rstrip("/")
 BOT_USERNAME = (os.getenv("BOT_USERNAME") or "HHSearchVacanciesBot").strip().lstrip("@")
+BOT_TOKEN = (os.getenv("BOT_TOKEN") or "").strip()
+
+JWT_SECRET = (os.getenv("JWT_SECRET") or os.getenv("ADMIN_API_KEY") or "change-me-jwt-secret").strip()
+JWT_EXPIRE_DAYS = int(os.getenv("JWT_EXPIRE_DAYS", "30"))
+
+# Режим автооткликов на сайте (МСК)
+AUTO_APPLY_HOUR_START = int(os.getenv("AUTO_APPLY_HOUR_START", "10"))
+AUTO_APPLY_HOUR_END = int(os.getenv("AUTO_APPLY_HOUR_END", "22"))
 
 YOOKASSA_SHOP_ID = (os.getenv("YOOKASSA_SHOP_ID") or "").strip()
 YOOKASSA_SECRET_KEY = (os.getenv("YOOKASSA_SECRET_KEY") or "").strip()
