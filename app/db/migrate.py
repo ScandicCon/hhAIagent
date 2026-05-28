@@ -52,11 +52,13 @@ def migrate_apply_mode_defaults() -> None:
     columns = {c["name"] for c in inspector.get_columns("profiles")}
     if "apply_mode" not in columns:
         return
+    # PostgreSQL: boolean, не integer (нельзя `= 1`)
     with engine.begin() as connection:
         connection.execute(
             text(
                 "UPDATE profiles SET apply_mode = 'auto' "
-                "WHERE auto_apply_enabled = 1 AND (apply_mode IS NULL OR apply_mode = '')"
+                "WHERE auto_apply_enabled IS TRUE "
+                "AND (apply_mode IS NULL OR apply_mode = '')"
             )
         )
 
